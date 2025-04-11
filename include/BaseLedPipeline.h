@@ -1,63 +1,7 @@
 #pragma once
 
-#include <FastLED.h>
-
-CRGB operator*(CRGB first, CRGB second);
-
-CRGB &operator*=(CRGB &first, const CRGB &second);
-
-enum BlendingMode {
-    OVERWRITE,
-    ADD,
-    MULTIPLY
-};
-
-/**
- * A class representing a buffer of data used to build out effects. Each effect populates
- * a buffer passed to it in its calculate() method. Buffers are meant to be short lived.
- * They hold enough information for every LED in FastLED, including multiple strips.
- */
-class TemporaryLedData {
-
-private:
-public:
-    /**
-     * The internal data stored in the temporary buffer. This is heap memory created when the buffer
-     * is instantiated, and deleted afterwards.
-     */
-    CRGB *data;
-
-    /**
-     *The total number of LEDs added to FastLED. This is populated in the initialize() method.
-     */
-    static int numLeds;
-
-    /**
-     * Initialize static information needed for all LED data. This should be called
-     * before any calls to pipelines (run, calculate, or anything else.).
-     */
-    static void initialize ();
-
-
-    /**
-     * an operator to make accessing data as simple as it is for CRGB structs. It can be populated
-     * directly with CRGB data, the same as a normal CRGB array.d
-     * @param index the index in the temporary data to access / write to.
-     * @return the CRGB data living at that index in the temporary buffer.
-     */
-    CRGB &operator[](int index) {
-        return data[index];
-    }
-
-
-    TemporaryLedData();
-
-    ~TemporaryLedData();
-
-    void merge(TemporaryLedData &other, BlendingMode blendingMode);
-
-    void populateFastLed();
-};
+#include "FastLED.h"
+#include "LedPipelineUtils.h"
 
 class BaseLedPipelineStage {
 public:
@@ -68,7 +12,7 @@ public:
 
     BaseLedPipelineStage *nextStage = nullptr;
 
-    virtual void calculate(int startIndex, TemporaryLedData tempData) = 0;
+    virtual void calculate(int startIndex, TemporaryLedData &tempData) = 0;
 
     virtual void reset();
 
@@ -92,7 +36,7 @@ public:
 
     void reset() override;
 
-    virtual ~LedPipeline();
+    ~LedPipeline() override;
 
 protected:
     /**
@@ -113,7 +57,7 @@ class ParallelLedPipeline : public LedPipeline {
 
 public:
 
-    void calculate(int startIndex, TemporaryLedData tempData) override;
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
 
 };
 
@@ -125,7 +69,7 @@ public:
 class SeriesLedPipeline : public LedPipeline {
 
 public:
-    void calculate(int startIndex, TemporaryLedData tempData) override;
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 
