@@ -3,7 +3,7 @@
 
 #include "BaseLedPipeline.h"
 
-class WrapperEffect : public BaseLedPipelineStage {
+class WrapperEffect : virtual public BaseLedPipelineStage {
 protected:
     BaseLedPipelineStage *stage;
 public:

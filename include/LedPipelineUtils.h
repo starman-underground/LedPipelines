@@ -8,7 +8,7 @@ enum LedPipelinesLogLevel {
     ERROR,
     WARN,
     LOG,
-    VERBOSE
+    Debug
 };
 
 
@@ -16,16 +16,53 @@ enum LedPipelinesSmoothingType {
     LINEAR,
     SINE,
     CUBIC,
-
 };
 
-struct LedPipelinesUtils {
+struct LPLogger {
+
+private:
+    static void logInternal(LedPipelinesLogLevel logLevel, String &log);
+
 public:
     static LedPipelinesLogLevel logLevel;
 
-    static void setLogLevel(LedPipelinesLogLevel logLevel) { LedPipelinesUtils::logLevel = logLevel; }
+    static void setLogLevel(LedPipelinesLogLevel logLevel) { LPLogger::logLevel = logLevel; }
 
-    static void log(LedPipelinesLogLevel logLevel, String log);
+    static void log(String log) { LPLogger::logInternal(LOG, log); }
+    static void log(int log) { LPLogger::log(String(log)); }
+    static void log(unsigned int log) { LPLogger::log(String(log)); }
+    static void log(long log) { LPLogger::log(String(log)); }
+    static void log(unsigned long log) { LPLogger::log(String(log)); }
+    static void log(char log) { LPLogger::log(String(log)); }
+    static void log(float log) { LPLogger::log(String(log)); }
+    static void log(double log) { LPLogger::log(String(log)); }
+
+    static void warn(String warn) { LPLogger::logInternal(WARN, warn); }
+    static void warn(int warn) { LPLogger::warn(String(warn)); }
+    static void warn(unsigned int warn) { LPLogger::warn(String(warn)); }
+    static void warn(long warn) { LPLogger::warn(String(warn)); }
+    static void warn(unsigned long warn) { LPLogger::warn(String(warn)); }
+    static void warn(char warn) { LPLogger::warn(String(warn)); }
+    static void warn(float warn) { LPLogger::warn(String(warn)); }
+    static void warn(double warn) { LPLogger::warn(String(warn)); }
+
+    static void error(String error) { LPLogger::logInternal(ERROR, error); }
+    static void error(int error) { LPLogger::error(String(error)); }
+    static void error(unsigned int error) { LPLogger::error(String(error)); }
+    static void error(long error) { LPLogger::error(String(error)); }
+    static void error(unsigned long error) { LPLogger::error(String(error)); }
+    static void error(char error) { LPLogger::error(String(error)); }
+    static void error(float error) { LPLogger::error(String(error)); }
+    static void error(double error) { LPLogger::error(String(error)); }
+
+    static void debug(String log) { LPLogger::logInternal(Debug, log); }
+    static void debug(int log) { LPLogger::debug(String(log)); };
+    static void debug(unsigned int log) { LPLogger::debug(String(log)); };
+    static void debug(long log) { LPLogger::debug(String(log)); };
+    static void debug(unsigned long log) { LPLogger::debug(String(log)); };
+    static void debug(char log) { LPLogger::debug(String(log)); };
+    static void debug(float log) { LPLogger::debug(String(log)); };
+    static void debug(double log) { LPLogger::debug(String(log)); };
 };
 
 
@@ -45,6 +82,14 @@ enum BlendingMode {
  * They hold enough information for every LED in FastLED, including multiple strips.
  */
 class TemporaryLedData {
+
+private:
+    /**
+     * Store the start indices so they can be recalled when setting in 2D matrix form (e.g. setting pixels on specific strips).
+     */
+    static int *startIndexes;
+
+
 public:
     /**
      * The internal data stored in the temporary buffer. This is heap memory created when the buffer
@@ -72,7 +117,7 @@ public:
 
     /**
      * an operator to make accessing data as simple as it is for CRGB structs. It can be populated
-     * directly with CRGB data, the same as a normal CRGB array.d
+     * directly with CRGB data, the same as a normal CRGB array.
      * @param index the index in the temporary data to access / write to.
      * @return the CRGB data living at that index in the temporary buffer.
      */
@@ -80,6 +125,9 @@ public:
         return data[index];
     }
 
+    /**
+     * Constructor for creating LED data. Will create a buffer dynamically based on how many LEDs are added in
+     */
     TemporaryLedData();
 
     ~TemporaryLedData();
@@ -91,5 +139,7 @@ public:
     void printData() const;
 
     void set(int index, CRGB &color);
+
+    void set (int stripIndex, int ledIndex, CRGB &color);
 };
 

@@ -16,7 +16,7 @@ void setup() {
     FastLED.showColor(CRGB::Black);
 
 
-    LedPipelinesUtils::setLogLevel(VERBOSE);
+    LPLogger::setLogLevel(Debug);
 
     FastLED.show();
 
@@ -30,12 +30,18 @@ void setup() {
     Serial.println(TemporaryLedData::size);
 
     pipeline = ((new ParallelLedPipeline())
-            ->addStage(new SolidEffect(CRGB::White))
+            ->addStage(new LoopEffect(
+                    (new SeriesLedPipeline())
+                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::White), 1))
+                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Yellow), 2))
+                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Magenta), 3)))
+            )
             ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Red, 5), 0))
             ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Green, 5), 5))
-            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 10), 10))
+            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 5), 10))
     );
     Serial.println("done initializing pipeline");
+    pipeline->reset();
 }
 
 void loop() {

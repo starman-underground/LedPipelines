@@ -3,10 +3,17 @@
 #include "FastLED.h"
 #include "LedPipelineUtils.h"
 
+
+enum LedPipelineRunningState {
+    NOT_STARTED,
+    RUNNING,
+    DONE
+};
+
 class BaseLedPipelineStage {
 public:
 
-    bool running = true;
+    LedPipelineRunningState running = NOT_STARTED;
 
     BlendingMode blendingMode = ADD;
 

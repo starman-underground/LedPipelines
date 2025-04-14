@@ -3,7 +3,7 @@
 
 #include "BaseEffect.h"
 
-class PulsingEffect : public WrapperEffect {
+class PulsingEffect : virtual public WrapperEffect {
 
 
 

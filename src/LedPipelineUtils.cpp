@@ -2,10 +2,11 @@
 #include "LedPipelineUtils.h"
 
 
-LedPipelinesLogLevel LedPipelinesUtils::logLevel = VERBOSE;
+LedPipelinesLogLevel LPLogger::logLevel = Debug;
 
-void LedPipelinesUtils::log(LedPipelinesLogLevel logLevel, String log) {
-    if (LedPipelinesUtils::logLevel >= logLevel) {
+void LPLogger::logInternal(LedPipelinesLogLevel logLevel, String &log) {
+
+    if (LPLogger::logLevel >= logLevel) {
         String logLevelString;
         switch (logLevel) {
             case NONE:
@@ -20,8 +21,8 @@ void LedPipelinesUtils::log(LedPipelinesLogLevel logLevel, String log) {
             case LOG:
                 logLevelString = "[LOG]";
                 break;
-            case VERBOSE:
-                logLevelString = "[VER]";
+            case Debug:
+                logLevelString = "[DEB]";
                 break;
         }
         Serial.println(logLevelString + " " + log);
@@ -45,10 +46,15 @@ CRGB &operator*=(CRGB &first, const CRGB &second) {
 
 int TemporaryLedData::size = 0;
 
+int *TemporaryLedData::startIndexes = nullptr;
+
 void TemporaryLedData::initialize() {
+
     // calculate the total number of LEDs.
+    TemporaryLedData::startIndexes = new int[FastLED.count()];
     size = 0;
     for (int i = 0; i < FastLED.count(); i++) {
+        TemporaryLedData::startIndexes[i] = size;
         size += FastLED[i].size();
     }
 }
@@ -68,9 +74,6 @@ TemporaryLedData::~TemporaryLedData() {
 }
 
 void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode) {
-
-    LedPipelinesUtils::log(LOG, String("blending with mode ") + blendingMode);
-
     for (int i = 0; i < TemporaryLedData::size; i++) {
         // if other pixel isn't modified, we skip this pixel.
         if (!other.modified[i])
@@ -96,6 +99,13 @@ void TemporaryLedData::set(int index, CRGB &color) {
     (*this)[index] = color;
 }
 
+void TemporaryLedData::set(int stripIndex, int ledIndex, CRGB &color) {
+    if (stripIndex < 0 || stripIndex >= FastLED.count()) return; // strip doesn't exist
+    if (ledIndex < 0 || ledIndex >= FastLED[stripIndex].size()) return; // LED doesn't exist on specified strip
+    int index = startIndexes[stripIndex] + ledIndex; // index in array
+    this->set(index, color);
+}
+
 void TemporaryLedData::populateFastLed() const {
     int currentLed = 0;
     for (int i = 0; i < FastLED.count(); i++) {
@@ -111,23 +121,23 @@ void TemporaryLedData::printData() const {
         data += this->data[i].r;
         data += "\t";
     }
-    LedPipelinesUtils::log(LOG, data);
+    LPLogger::log(data);
     data = "G: \t";
     for (int i = 0; i < size; i++) {
         data += this->data[i].g;
         data += "\t";
     }
-    LedPipelinesUtils::log(LOG, data);
+    LPLogger::log(data);
     data = "B: \t";
     for (int i = 0; i < size; i++) {
         data += this->data[i].b;
         data += "\t";
     }
-    LedPipelinesUtils::log(LOG, data);
+    LPLogger::log(data);
     data = "M: \t";
     for (int i = 0; i < size; i++) {
         data += this->modified[i];
         data += "\t";
     }
-    LedPipelinesUtils::log(LOG, data + "\n");
+    LPLogger::log(data + "\n");
 }

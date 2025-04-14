@@ -3,12 +3,11 @@
 #include "effects/SolidEffect.h"
 
 SolidEffect::SolidEffect(CRGB color) : BaseLedPipelineStage(OVERWRITE), color(color) {
-    LedPipelinesUtils::log(LOG, String("solid created with blending mode ") + blendingMode);
-
+    LPLogger::log(String("solid created with blending mode ") + blendingMode);
+    this->running = RUNNING;
 }
 
 void SolidEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-
     for (int i = startIndex; i < TemporaryLedData::size; i++) {
         if (i < 0) continue;
         tempData.set(i, color);
@@ -19,7 +18,7 @@ void SolidEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 SolidSegmentEffect::SolidSegmentEffect(CRGB color, int segmentLength)
         : SolidEffect(color),
           segmentLength(segmentLength) {
-    LedPipelinesUtils::log(LOG, String("segment created with blending mode ") + blendingMode);
+    LPLogger::log(String("segment created with blending mode ") + blendingMode);
 }
 
 void SolidSegmentEffect::calculate(int startIndex, TemporaryLedData &tempData) {

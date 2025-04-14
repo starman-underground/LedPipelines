@@ -8,7 +8,10 @@
 #include "MovingEffect.h"
 #include "RepeatEffect.h"
 #include "OffsetEffect.h"
+#include "TimeBoxedEffect.h"
+
 
 
 // basic effects
 #include "SolidEffect.h"
+#include "WaitEffect.h"
