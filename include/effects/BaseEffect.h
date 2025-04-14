@@ -3,7 +3,7 @@
 
 #include "BaseLedPipeline.h"
 
-class WrapperEffect : virtual public BaseLedPipelineStage {
+class WrapperEffect : public BaseLedPipelineStage {
 protected:
     BaseLedPipelineStage *stage;
 public:
@@ -12,6 +12,18 @@ public:
     ~WrapperEffect() override;
 
     void reset() override;
+};
+
+
+class TimedEffect {
+protected:
+    unsigned long startTimeMillis;
+    float elapsedPercentage;
+    float timeToRunSeconds;
+
+    TimedEffect(float timeToRunSeconds);
+
+    void reset();
 };
 
 

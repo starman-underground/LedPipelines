@@ -2,7 +2,7 @@
 
 
 TimeBoxedEffect::TimeBoxedEffect(BaseLedPipelineStage *stage, float timeToRunSeconds)
-        : WrapperEffect(stage), timeToRunSeconds(timeToRunSeconds) {}
+        : WrapperEffect(stage), TimedEffect(timeToRunSeconds) {}
 
 
 void TimeBoxedEffect::calculate(int startIndex, TemporaryLedData &tempData) {
@@ -11,10 +11,10 @@ void TimeBoxedEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     if (this->running == NOT_STARTED) {
         LPLogger::log(String("starting time boxed effect. Running for ") + timeToRunSeconds + " seconds");
         this->running = RUNNING;
-        startTimeMs = millis();
+        startTimeMillis = millis();
     }
 
-    unsigned long elapsedTime = millis() - startTimeMs;
+    unsigned long elapsedTime = millis() - startTimeMillis;
     if (elapsedTime / 1000.0 >= timeToRunSeconds) {
         LPLogger::log("done running time boxed effect.");
         this->elapsedPercentage = 1;
@@ -33,6 +33,6 @@ void TimeBoxedEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 
 void TimeBoxedEffect::reset() {
     WrapperEffect::reset();
-    this->startTimeMs = millis();
+    this->startTimeMillis = millis();
     this->elapsedPercentage = 0;
 }

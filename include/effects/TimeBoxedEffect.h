@@ -3,16 +3,9 @@
 #include "BaseEffect.h"
 
 
-class TimeBoxedEffect : public WrapperEffect {
+class TimeBoxedEffect : public WrapperEffect, public TimedEffect {
 
 public:
-
-    unsigned long startTimeMs;
-
-    float timeToRunSeconds;
-
-    float elapsedPercentage;
-
     TimeBoxedEffect(BaseLedPipelineStage *stage, float timeToRunSeconds);
 
     void reset() override;

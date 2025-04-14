@@ -3,8 +3,7 @@
 
 #include "BaseEffect.h"
 
-class PulsingEffect : virtual public WrapperEffect {
-
-
-
+class PulsingEffect : public WrapperEffect, public TimedEffect {
+public:
+    PulsingEffect(BaseLedPipelineStage *stage, float time);
 };
