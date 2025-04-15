@@ -14,6 +14,7 @@ void BaseLedPipelineStage::reset() {
     this->running = NOT_STARTED;
 }
 
+LedPipeline::LedPipeline(BlendingMode mode) : BaseLedPipelineStage(mode) {}
 
 LedPipeline::~LedPipeline() {
     delete firstStage;
@@ -51,6 +52,8 @@ void LedPipeline::reset() {
     }
 }
 
+ParallelLedPipeline::ParallelLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
+
 void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
     if (this->running == DONE)
         return;
@@ -67,9 +70,12 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
     LedPipelineRunningState anyArePlaying = DONE;
     int currentStageNumber = 0;
     while (currentStage != nullptr) {
+//        LPLogger::log(String("Running stage: ") + currentStageNumber);
         TemporaryLedData currentStageData = TemporaryLedData();
         currentStage->calculate(startIndex, currentStageData);
+//        currentStageData.printData();
         tempData.merge(currentStageData, currentStage->blendingMode);
+//        tempData.printData();
         anyArePlaying = currentStage->running == RUNNING ? RUNNING : anyArePlaying;
         currentStage = currentStage->nextStage;
         currentStageNumber++;
@@ -78,6 +84,7 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
     this->running = anyArePlaying;
 }
 
+SeriesLedPipeline::SeriesLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
 
 void SeriesLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
     if (this->running == DONE)

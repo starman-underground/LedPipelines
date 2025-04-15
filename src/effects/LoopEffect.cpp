@@ -23,7 +23,7 @@ void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     stage->calculate(startIndex, tempData);
 
     // check if the stage is done running. If still running, we return early.
-    if (stage->running == RUNNING) {
+    if (stage->running != DONE) {
         return;
     }
 
@@ -39,5 +39,7 @@ void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
                       + currentNumLoops + "/" + numLoops);
         this->running = RUNNING;
         this->stage->reset();
+        // since the stage might not calculate anything in done, we need to redo the stage.
+        this->stage->calculate(startIndex, tempData);
     }
 }

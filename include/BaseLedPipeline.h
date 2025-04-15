@@ -43,6 +43,8 @@ public:
 
     void reset() override;
 
+    LedPipeline(BlendingMode mode);
+
     ~LedPipeline() override;
 
 protected:
@@ -63,6 +65,7 @@ protected:
 class ParallelLedPipeline : public LedPipeline {
 
 public:
+    ParallelLedPipeline(BlendingMode mode = BlendingMode::OVERWRITE);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 
@@ -76,6 +79,9 @@ public:
 class SeriesLedPipeline : public LedPipeline {
 
 public:
+
+    SeriesLedPipeline(BlendingMode mode = BlendingMode::OVERWRITE);
+
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;

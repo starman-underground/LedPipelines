@@ -95,13 +95,14 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
 }
 
 void TemporaryLedData::set(int index, CRGB &color) {
+    if (index < 0 || index >= TemporaryLedData::size) return; // LED doesn't exist on specified strip
     modified[index] = true;
+    anyAreModified = true;
     (*this)[index] = color;
 }
 
 void TemporaryLedData::set(int stripIndex, int ledIndex, CRGB &color) {
     if (stripIndex < 0 || stripIndex >= FastLED.count()) return; // strip doesn't exist
-    if (ledIndex < 0 || ledIndex >= FastLED[stripIndex].size()) return; // LED doesn't exist on specified strip
     int index = startIndexes[stripIndex] + ledIndex; // index in array
     this->set(index, color);
 }

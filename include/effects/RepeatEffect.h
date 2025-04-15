@@ -8,7 +8,7 @@ private:
     int repeatDistance = 0;
 
 public:
-    RepeatEffect(BaseLedPipelineStage *stage, int numRepeats, int repeatDistance);
+    RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int numRepeats = 0);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 };

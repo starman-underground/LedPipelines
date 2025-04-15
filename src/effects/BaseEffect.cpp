@@ -2,6 +2,7 @@
 
 
 WrapperEffect::WrapperEffect(BaseLedPipelineStage *stage) :
+        BaseLedPipelineStage(stage->blendingMode),
         stage(stage) {}
 
 WrapperEffect::~WrapperEffect() {

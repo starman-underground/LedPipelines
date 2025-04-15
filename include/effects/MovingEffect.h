@@ -4,27 +4,20 @@
 #include "BaseEffect.h"
 
 
-
 class MovingEffect : public WrapperEffect {
 
 private:
-    float ledsPerSecond = 1;
+    float ledsPerSecond;
     float currentPosition;
-public:
-    MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond);
-
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
-};
-
-class MovingSegmentEffect : public WrapperEffect {
-
-private:
-    float ledsPerSecond = 1;
-    float currentPosition;
-    int segmentLength;
+    int startPosition;
+    int endPosition;
+    float elapsedPercentage;
+    unsigned long startTimeMillis;
 
 public:
-    MovingSegmentEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int segmentLength);
+    MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int startPosition = 0, int endPosition = TemporaryLedData::size);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
+
+    void reset() override;
 };

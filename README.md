@@ -18,3 +18,8 @@ Let's say you want to make a really basic effect. A red bar, with a blue light b
 In WLED, you can do a single background color and then a single pulse that goes forward. Making another pulse go backwards, however, is a little more challenging. And making more than one is very very hard.
 
 In LedPipelines, this is really simple.
+
+
+LedPipelines is built around the idea of Pipelines, which are constructs that can add together effects in different ways. There are two main pipeline types: Series and Parallel. Series pipelines run each effect, one after another, and waits for each effect to complete before moving to the next effect. Parallel pipelines run all their effects at the same time, stacking them one on top of another.
+
+Let's start with a Parallel pipeline.
