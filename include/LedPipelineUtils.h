@@ -99,6 +99,7 @@ CRGB operator*(CRGB first, CRGB second);
 CRGB &operator*=(CRGB &first, const CRGB &second);
 
 enum BlendingMode {
+    NORMAL,
     OVERWRITE,
     ADD,
     MULTIPLY
@@ -126,10 +127,10 @@ public:
     CRGB *data;
 
     /**
-     * To tell in the merging algorithm whether to merge the current pixel, we need to know if it was modified
-     * at all. We can do this using another array that stores the modified value.
+     * To tell in the merging algorithm whether to merge the current pixel, we need to know if it was used
+     * at all. We can do this using another array that stores the opacity value.
      */
-    bool *modified;
+    uint8_t *opacity;
 
     /**
      * Tracks if any LEDs have been set. Default to false, changes to true when a call to set() results in an LED
@@ -172,8 +173,8 @@ public:
 
     void printData() const;
 
-    void set(int index, CRGB &color);
+    void set(int index, CRGB &color, uint8_t opacity = UINT8_MAX);
 
-    void set(int stripIndex, int ledIndex, CRGB &color);
+    void set(int stripIndex, int ledIndex, CRGB &color, uint8_t opacity = UINT8_MAX);
 };
 

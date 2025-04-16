@@ -9,6 +9,7 @@
 #include "RepeatEffect.h"
 #include "OffsetEffect.h"
 #include "TimeBoxedEffect.h"
+#include "AbsolutePositionEffect.h"
 
 
 

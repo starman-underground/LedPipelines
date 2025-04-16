@@ -39,33 +39,36 @@ void setup() {
 //            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Red, 5), 0))
 //            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Green, 5), 5))
 //            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 5), 10))
-            ->addStage((new ParallelLedPipeline())
-                               ->addStage(new LoopEffect(
-                                                  new MovingEffect(
-                                                          new RepeatEffect(
-                                                                  new SolidSegmentEffect(
-                                                                          CRGB::Red, 15
-                                                                  ),
-                                                                  30),
-                                                          10,
-                                                          0,
-                                                          30
-                                                  )
-                                          )
-                               )
-                               ->addStage(new LoopEffect(
-                                                  new MovingEffect(
-                                                          new RepeatEffect(
-                                                                  new SolidSegmentEffect(
-                                                                          CRGB::Blue, 10
-                                                                  ),
-                                                                  20),
-                                                          -5,
-                                                          0,
-                                                          -20
-                                                  )
-                                          )
-                               )
+            ->addStage(
+                    (new ParallelLedPipeline())
+                            ->addStage(
+                                    new LoopEffect(
+                                            new MovingEffect(
+                                                    new RepeatEffect(
+                                                            new SolidSegmentEffect(
+                                                                    CRGB::Red, 15
+                                                            ),
+                                                            30),
+                                                    10,
+                                                    0,
+                                                    30
+                                            )
+                                    )
+                            )
+                            ->addStage(
+                                    new LoopEffect(
+                                            new MovingEffect(
+                                                    new RepeatEffect(
+                                                            new SolidSegmentEffect(
+                                                                    CRGB::Blue, 10
+                                                            ),
+                                                            20),
+                                                    -5,
+                                                    0,
+                                                    -20
+                                            )
+                                    )
+                            )
             )
     );
     Serial.println("done initializing pipeline");

@@ -61,25 +61,24 @@ void TemporaryLedData::initialize() {
 
 TemporaryLedData::TemporaryLedData() {
     data = new CRGB[size];
-    modified = new bool[size];
+    opacity = new uint8_t[size];
     for (int i = 0; i < size; i++) {
         (*this)[i] = CRGB::Black;
-        modified[i] = false;
+        opacity[i] = false;
     }
 }
 
 TemporaryLedData::~TemporaryLedData() {
     delete[] data;
-    delete[] modified;
+    delete[] opacity;
 }
 
 void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode) {
     for (int i = 0; i < TemporaryLedData::size; i++) {
-        // if other pixel isn't modified, we skip this pixel.
-        if (!other.modified[i])
+        // if other pixel has no opacity, we skip this pixel.
+        if (!other.opacity[i])
             continue;
-
-        this->modified[i] = true;
+        this->opacity[i] = true;
         switch (blendingMode) {
             case OVERWRITE:
                 this->data[i] = other[i];
@@ -90,21 +89,26 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
             case MULTIPLY:
                 this->data[i] *= other[i] * this->data[i];
                 break;
+            case NORMAL:
+                this->data[i] = ((255 - other.opacity[i]) * this->data[i] + other.opacity[i] * other[i]) / 255;
+                break;
         }
     }
 }
 
-void TemporaryLedData::set(int index, CRGB &color) {
+
+
+void TemporaryLedData::set(int index, CRGB &color, uint8_t opacity) {
     if (index < 0 || index >= TemporaryLedData::size) return; // LED doesn't exist on specified strip
-    modified[index] = true;
+    this->opacity[index] = opacity;
     anyAreModified = true;
     (*this)[index] = color;
 }
 
-void TemporaryLedData::set(int stripIndex, int ledIndex, CRGB &color) {
+void TemporaryLedData::set(int stripIndex, int ledIndex, CRGB &color, uint8_t opacity) {
     if (stripIndex < 0 || stripIndex >= FastLED.count()) return; // strip doesn't exist
     int index = startIndexes[stripIndex] + ledIndex; // index in array
-    this->set(index, color);
+    this->set(index, color, opacity);
 }
 
 void TemporaryLedData::populateFastLed() const {
@@ -137,7 +141,7 @@ void TemporaryLedData::printData() const {
     LPLogger::log(data);
     data = "M: \t";
     for (int i = 0; i < size; i++) {
-        data += this->modified[i];
+        data += this->opacity[i];
         data += "\t";
     }
     LPLogger::log(data + "\n");
