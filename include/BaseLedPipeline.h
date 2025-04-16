@@ -23,7 +23,7 @@ public:
 
     virtual void reset();
 
-    explicit BaseLedPipelineStage(BlendingMode blendingMode = ADD);
+    explicit BaseLedPipelineStage(BlendingMode blendingMode = NORMAL);
 
     virtual ~BaseLedPipelineStage();
 };
@@ -65,7 +65,7 @@ protected:
 class ParallelLedPipeline : public LedPipeline {
 
 public:
-    ParallelLedPipeline(BlendingMode mode = BlendingMode::OVERWRITE);
+    ParallelLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 
@@ -80,7 +80,7 @@ class SeriesLedPipeline : public LedPipeline {
 
 public:
 
-    SeriesLedPipeline(BlendingMode mode = BlendingMode::OVERWRITE);
+    SeriesLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 

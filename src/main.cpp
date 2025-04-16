@@ -5,6 +5,7 @@
 LedPipeline *pipeline;
 
 void setup() {
+
     CRGB *leds = new CRGB[1000];
 
     Serial.begin(115200);
@@ -22,14 +23,13 @@ void setup() {
 
     delay(1000);
     FastLED.setMaxRefreshRate(30);
-    FastLED.setBrightness(50);
     TemporaryLedData::initialize();
 
     Serial.print("There are this many leds: ");
     Serial.println(TemporaryLedData::size);
 
     pipeline = ((new ParallelLedPipeline())
-//            ->addStage(new SolidEffect(CRGB::YellowGreen))
+//            ->addStage(new SolidEffect(CRGB::Black))
 //            ->addStage(new LoopEffect(
 //                    (new SeriesLedPipeline(BlendingMode::OVERWRITE))
 //                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::White), 1))
@@ -40,35 +40,37 @@ void setup() {
 //            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Green, 5), 5))
 //            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 5), 10))
             ->addStage(
-                    (new ParallelLedPipeline())
-                            ->addStage(
-                                    new LoopEffect(
-                                            new MovingEffect(
-                                                    new RepeatEffect(
-                                                            new SolidSegmentEffect(
-                                                                    CRGB::Red, 15
-                                                            ),
-                                                            30),
+                    new LoopEffect(
+                            new MovingEffect(
+                                    new RepeatEffect(
+                                            new SolidSegmentEffect(
+                                                    CRGB::Blue, 15
+                                            ),
+                                            30),
+                                    10,
+                                    0,
+                                    30
+                            )
+                    )
+
+            )
+            ->addStage(
+                    new LoopEffect(
+                            new MovingEffect(
+                                    new RepeatEffect(
+                                            new StartFadeEffect(
+                                                    new SolidSegmentEffect(
+                                                            CRGB::DarkRed, 10
+                                                    ),
                                                     10,
-                                                    0,
-                                                    30
-                                            )
-                                    )
+                                                    SMOOTH_LINEAR
+                                            ),
+                                            20),
+                                    -5,
+                                    0,
+                                    -20
                             )
-                            ->addStage(
-                                    new LoopEffect(
-                                            new MovingEffect(
-                                                    new RepeatEffect(
-                                                            new SolidSegmentEffect(
-                                                                    CRGB::Blue, 10
-                                                            ),
-                                                            20),
-                                                    -5,
-                                                    0,
-                                                    -20
-                                            )
-                                    )
-                            )
+                    )
             )
     );
     Serial.println("done initializing pipeline");

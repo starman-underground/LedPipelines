@@ -13,6 +13,18 @@ void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     if (this->running == NOT_STARTED)
         this->running = RUNNING;
 
+//    // only calculate the data once. We first calculate it at 0, and then shift it by how much
+//    TemporaryLedData stageData = TemporaryLedData();
+//    this->stage->calculate(0, stageData);
+//
+//    TemporaryLedData shiftedStageData = TemporaryLedData();
+//
+//    for (int i = 0; i < TemporaryLedData::size; i++) {
+//        shiftedStageData.set(i + startIndex, stageData[i], stageData.opacity[i]);
+//    }
+//
+
+    // shift it by x amount.
     if (numRepeats == 0) {
         // if num repeats isn't specified, then we use infinite repeats. Do this both forwards and backwards.
         int currentIndex = startIndex;
@@ -34,9 +46,9 @@ void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
             currentIndex -= repeatDistance;
         }
     } else {
-        for (int i = 0; i < numRepeats; i ++) {
+        for (int i = 0; i < numRepeats; i++) {
             TemporaryLedData stageData = TemporaryLedData();
-            this->stage->calculate(startIndex + i * repeatDistance      , stageData);
+            this->stage->calculate(startIndex + i * repeatDistance, stageData);
             tempData.merge(stageData, this->stage->blendingMode);
         }
     }

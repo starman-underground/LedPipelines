@@ -2,7 +2,7 @@
 
 #include "effects/SolidEffect.h"
 
-SolidEffect::SolidEffect(CRGB color) : BaseLedPipelineStage(OVERWRITE), color(color) {
+SolidEffect::SolidEffect(CRGB color) : BaseLedPipelineStage(NORMAL), color(color) {
     this->running = RUNNING;
 }
 

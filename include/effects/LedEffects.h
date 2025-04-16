@@ -10,7 +10,8 @@
 #include "OffsetEffect.h"
 #include "TimeBoxedEffect.h"
 #include "AbsolutePositionEffect.h"
-
+#include "OpacityScalingEffect.h"
+#include "StartFadeEffect.h"
 
 
 // basic effects

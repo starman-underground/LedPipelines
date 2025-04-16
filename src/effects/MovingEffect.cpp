@@ -35,7 +35,6 @@ void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     int deltaLeds = (int) currentPosition;
     this->elapsedPercentage = this->currentPosition / this->endPosition;
     this->stage->calculate(startIndex + deltaLeds, tempData);
-
     if (this->stage->running == DONE) {
         this->running = DONE;
     }

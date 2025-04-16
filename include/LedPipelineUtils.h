@@ -15,8 +15,14 @@ enum LedPipelinesLogLevel {
 enum LedPipelinesSmoothingType {
     LINEAR,
     SINE,
-    CUBIC,
+    SMOOTH_LINEAR
 };
+
+
+int interpolate (LedPipelinesSmoothingType type, int oldStart, int oldEnd, int newStart, int newEnd, int amount);
+
+
+int interpolate(LedPipelinesSmoothingType type, int newStart, int newEnd, float amount);
 
 struct LPLogger {
 
@@ -105,6 +111,16 @@ enum BlendingMode {
     MULTIPLY
 };
 
+
+/**
+ * Convert a Color and opacity to a hex code, in form FFFFFFFF, or RGBA.
+ * @param color the color to convert, in RGB form.
+ * @param opacity the opacity of the color to convert.
+ * @return the color in Hex form in a string.
+ */
+String ColorToHex (CRGB color, uint8_t opacity);
+
+
 /**
  * A class representing a buffer of data used to build out effects. Each effect populates
  * a buffer passed to it in its calculate() method. Buffers are meant to be short lived.
@@ -173,7 +189,7 @@ public:
 
     void printData() const;
 
-    void set(int index, CRGB &color, uint8_t opacity = UINT8_MAX);
+    void set(int index, CRGB color, uint8_t opacity = UINT8_MAX);
 
     void set(int stripIndex, int ledIndex, CRGB &color, uint8_t opacity = UINT8_MAX);
 };
