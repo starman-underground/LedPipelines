@@ -11,7 +11,7 @@
 #include "TimeBoxedEffect.h"
 #include "AbsolutePositionEffect.h"
 #include "OpacityScalingEffect.h"
-#include "StartFadeEffect.h"
+#include "OpacityGradientEffect.h"
 
 
 // basic effects

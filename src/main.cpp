@@ -22,7 +22,7 @@ void setup() {
     FastLED.show();
 
     delay(1000);
-    FastLED.setMaxRefreshRate(30);
+    FastLED.setMaxRefreshRate(300);
     TemporaryLedData::initialize();
 
     Serial.print("There are this many leds: ");
@@ -58,13 +58,25 @@ void setup() {
                     new LoopEffect(
                             new MovingEffect(
                                     new RepeatEffect(
-                                            new StartFadeEffect(
-                                                    new SolidSegmentEffect(
-                                                            CRGB::DarkRed, 10
-                                                    ),
-                                                    10,
-                                                    SMOOTH_LINEAR
-                                            ),
+                                            (new ParallelLedPipeline())
+                                                    ->addStage(
+                                                            new SolidSegmentEffect(
+                                                                    CRGB::White,
+                                                                    10
+                                                            )
+                                                    )
+                                                    ->addStage(
+                                                            new OpacityGradientEffect(
+                                                                    new OpacityGradientEffect(
+                                                                            new SolidSegmentEffect(
+                                                                                    CRGB::DarkRed, 10
+                                                                            ),
+                                                                            -5,
+                                                                            10),
+                                                                    5
+                                                            )
+                                                    )
+                                            ,
                                             20),
                                     -5,
                                     0,
@@ -78,5 +90,9 @@ void setup() {
 }
 
 void loop() {
+    unsigned long startTime = millis();
     pipeline->run();
+    unsigned long endTime = millis();
+    unsigned long frameRate = 1000.0f / (endTime - startTime);
+    LPLogger::log(String("framerate: ") + frameRate);
 }

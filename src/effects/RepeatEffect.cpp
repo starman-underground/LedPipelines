@@ -37,7 +37,7 @@ void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
             currentIndex += repeatDistance;
         }
         currentStageSetsData = true;
-        currentIndex = startIndex;
+        currentIndex = startIndex - repeatDistance;
         while (currentStageSetsData) {
             TemporaryLedData stageData = TemporaryLedData();
             this->stage->calculate(currentIndex, stageData);

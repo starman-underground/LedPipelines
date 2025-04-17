@@ -118,7 +118,7 @@ enum BlendingMode {
  * @param opacity the opacity of the color to convert.
  * @return the color in Hex form in a string.
  */
-String ColorToHex (CRGB color, uint8_t opacity);
+String colorToHex (CRGB color, uint8_t opacity);
 
 
 /**
@@ -192,5 +192,9 @@ public:
     void set(int index, CRGB color, uint8_t opacity = UINT8_MAX);
 
     void set(int stripIndex, int ledIndex, CRGB &color, uint8_t opacity = UINT8_MAX);
+
+    CRGB get(int index) const;
+
+    uint8_t getOpacity (int index) const;
 };
 

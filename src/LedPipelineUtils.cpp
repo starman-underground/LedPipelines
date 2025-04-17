@@ -119,6 +119,8 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
         // if other pixel has no opacity, we skip this pixel.
         if (!other.opacity[i])
             continue;
+
+        this->anyAreModified = true;
         switch (blendingMode) {
             case OVERWRITE:
                 this->data[i] = B_rgb;
@@ -136,7 +138,7 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
                 this->data[i].r = ((255 - B_alpha) * A_rgb.r + B_alpha * B_rgb.r) / 255;
                 this->data[i].g = ((255 - B_alpha) * A_rgb.g + B_alpha * B_rgb.g) / 255;
                 this->data[i].b = ((255 - B_alpha) * A_rgb.b + B_alpha * B_rgb.b) / 255;
-                this->opacity[i] = other.opacity[i];
+                this->opacity[i] = B_alpha + ((255 - B_alpha) * A_alpha) / 255;
                 break;
         }
     }
@@ -180,6 +182,20 @@ void TemporaryLedData::set(int stripIndex, int ledIndex, CRGB &color, uint8_t op
     if (stripIndex < 0 || stripIndex >= FastLED.count()) return; // strip doesn't exist
     int index = startIndexes[stripIndex] + ledIndex; // index in array
     this->set(index, color, opacity);
+}
+
+CRGB TemporaryLedData::get(int index) const {
+    if (index < 0 || index >= size)
+        return CRGB::Black;
+
+    return this->data[index];
+}
+
+uint8_t TemporaryLedData::getOpacity(int index) const {
+    if (index < 0 || index >= size)
+        return 0;
+
+    return this->opacity[index];
 }
 
 void TemporaryLedData::populateFastLed() const {

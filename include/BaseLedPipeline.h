@@ -15,7 +15,7 @@ public:
 
     LedPipelineRunningState running = NOT_STARTED;
 
-    BlendingMode blendingMode = ADD;
+    BlendingMode blendingMode;
 
     BaseLedPipelineStage *nextStage = nullptr;
 

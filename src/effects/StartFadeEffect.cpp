@@ -1,16 +1,17 @@
 
 
 
-#include "effects/StartFadeEffect.h"
+#include "effects/OpacityGradientEffect.h"
 
 
-StartFadeEffect::StartFadeEffect(BaseLedPipelineStage *stage, int fadeLength, LedPipelinesSmoothingType smoothingType)
-        : WrapperEffect(stage), fadeLength(fadeLength), smoothingType(smoothingType) {
+OpacityGradientEffect::OpacityGradientEffect(BaseLedPipelineStage *stage, int fadeLength, int startIndex,
+                                             LedPipelinesSmoothingType smoothingType)
+        : WrapperEffect(stage), fadeLength(fadeLength), smoothingType(smoothingType), startIndex(startIndex) {
 
 }
 
 
-void StartFadeEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     if (this->running == DONE)
         return;
 
@@ -18,26 +19,24 @@ void StartFadeEffect::calculate(int startIndex, TemporaryLedData &tempData) {
         this->running = RUNNING;
     }
 
-    TemporaryLedData stageData = TemporaryLedData();
 
-    this->stage->calculate(0, stageData);
+    this->stage->calculate(startIndex, tempData);
 
-    for (int i = 0; i < fadeLength; i++) {
-        stageData.opacity[i] = interpolate(
-                smoothingType,
-                0,
-                fadeLength,
-                0,
-                stageData.opacity[i],
-                i
+    for (int i = 0; i < abs(fadeLength); i++) {
+        int sign = fadeLength < 0 ? -1 : 1;
+        tempData.set(
+                startIndex + i * sign + this->startIndex,
+                tempData.get(startIndex + i * sign + this->startIndex),
+                interpolate(
+                        smoothingType,
+                        0,
+                        fadeLength,
+                        0,
+                        tempData.getOpacity(startIndex + i * sign + this->startIndex),
+                        i
+                )
         );
-        LPLogger::log(tempData.opacity[i]);
     }
-
-    for (int i = 0; i < TemporaryLedData::size; i++) {
-        tempData.set(i + startIndex, stageData[i], stageData.opacity[i]);
-    }
-
 
     this->running = this->stage->running;
 }

@@ -70,13 +70,13 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
     LedPipelineRunningState anyArePlaying = DONE;
     int currentStageNumber = 0;
     while (currentStage != nullptr) {
-//        LPLogger::log(String("Running stage: ") + currentStageNumber);
         TemporaryLedData currentStageData = TemporaryLedData();
         currentStage->calculate(startIndex, currentStageData);
+//        LPLogger::log(String("blending stage ") + currentStageNumber + " with mode " + currentStage->blendingMode);
 //        currentStageData.printData();
         tempData.merge(currentStageData, currentStage->blendingMode);
 //        tempData.printData();
-        anyArePlaying = currentStage->running == RUNNING ? RUNNING : anyArePlaying;
+        anyArePlaying = currentStage->running != DONE ? RUNNING : anyArePlaying;
         currentStage = currentStage->nextStage;
         currentStageNumber++;
     }
