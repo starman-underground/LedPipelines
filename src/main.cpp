@@ -12,79 +12,124 @@ void setup() {
 
     Serial.println("starting LEDs");
 
-    FastLED.addLeds<WS2812B, 12, GRB>(leds, 100);
-
-    FastLED.showColor(CRGB::Black);
-
+    FastLED.addLeds<WS2812B, 12, GRB>(leds, 144);
 
     LPLogger::setLogLevel(Debug);
 
-    FastLED.show();
-
-    delay(1000);
     FastLED.setMaxRefreshRate(300);
+    FastLED.setBrightness(50);
     TemporaryLedData::initialize();
 
     Serial.print("There are this many leds: ");
     Serial.println(TemporaryLedData::size);
+    const CRGB orange = 0xFF2000;
 
-    pipeline = ((new ParallelLedPipeline())
-//            ->addStage(new SolidEffect(CRGB::Black))
-//            ->addStage(new LoopEffect(
-//                    (new SeriesLedPipeline(BlendingMode::OVERWRITE))
-//                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::White), 1))
-//                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Yellow), 2))
-//                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Magenta), 3)))
-//            )
-//            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Red, 5), 0))
-//            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Green, 5), 5))
-//            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 5), 10))
+    pipeline = (new ParallelLedPipeline())
+            ->addStage(new SolidEffect(orange))
+            ->addStage(new SolidSegmentEffect(CRGB::Blue, 50))
             ->addStage(
                     new LoopEffect(
                             new MovingEffect(
                                     new RepeatEffect(
                                             new SolidSegmentEffect(
-                                                    CRGB::Blue, 15
+                                                    CRGB::White, 5
                                             ),
-                                            30),
+                                            10),
                                     10,
                                     0,
-                                    30
+                                    10
                             )
                     )
 
-            )
-            ->addStage(
-                    new LoopEffect(
-                            new MovingEffect(
-                                    new RepeatEffect(
-                                            (new ParallelLedPipeline())
-                                                    ->addStage(
-                                                            new SolidSegmentEffect(
-                                                                    CRGB::White,
-                                                                    10
-                                                            )
-                                                    )
-                                                    ->addStage(
-                                                            new OpacityGradientEffect(
-                                                                    new OpacityGradientEffect(
-                                                                            new SolidSegmentEffect(
-                                                                                    CRGB::DarkRed, 10
-                                                                            ),
-                                                                            -5,
-                                                                            10),
-                                                                    5
-                                                            )
-                                                    )
-                                            ,
-                                            20),
-                                    -5,
-                                    0,
-                                    -20
-                            )
-                    )
-            )
-    );
+            );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    pipeline = ((new ParallelLedPipeline())
+////            ->addStage(new SolidEffect(CRGB::Black))
+////            ->addStage(new LoopEffect(
+////                    (new SeriesLedPipeline(BlendingMode::OVERWRITE))
+////                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::White), 1))
+////                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Yellow), 2))
+////                            ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Magenta), 3)))
+////            )
+////            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Red, 5), 0))
+////            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Green, 5), 5))
+////            ->addStage(new OffsetEffect(new SolidSegmentEffect(CRGB::Blue, 5), 10))
+
+//            ->addStage(
+//                    new LoopEffect(
+//                            new MovingEffect(
+//                                    new RepeatEffect(
+//                                            (new ParallelLedPipeline())
+//                                                    ->addStage(
+//                                                            new SolidSegmentEffect(
+//                                                                    CRGB::White,
+//                                                                    10
+//                                                            )
+//                                                    )
+//                                                    ->addStage(
+//                                                            new OpacityGradientEffect(
+//                                                                    new OpacityGradientEffect(
+//                                                                            new SolidSegmentEffect(
+//                                                                                    CRGB::DarkRed, 10
+//                                                                            ),
+//                                                                            -5,
+//                                                                            10),
+//                                                                    5
+//                                                            )
+//                                                    )
+//                                            ,
+//                                            20),
+//                                    -5,
+//                                    0,
+//                                    -20
+//                            )
+//                    )
+//            )
+//    );
     Serial.println("done initializing pipeline");
     pipeline->reset();
 }

@@ -108,7 +108,7 @@ enum BlendingMode {
     NORMAL,
     OVERWRITE,
     ADD,
-    MULTIPLY
+    MULTIPLY,
 };
 
 
