@@ -12,11 +12,11 @@ void setup() {
 
     Serial.println("starting LEDs");
 
-    FastLED.addLeds<WS2812B, 12, GRB>(leds, 144);
+    FastLED.addLeds<WS2812B, 12, GRB>(leds, 20);
 
     LPLogger::setLogLevel(Debug);
 
-    FastLED.setMaxRefreshRate(300);
+    FastLED.setMaxRefreshRate(60);
     FastLED.setBrightness(50);
     TemporaryLedData::initialize();
 
@@ -25,23 +25,54 @@ void setup() {
     const CRGB orange = 0xFF2000;
 
     pipeline = (new ParallelLedPipeline())
-            ->addStage(new SolidEffect(orange))
-            ->addStage(new SolidSegmentEffect(CRGB::Blue, 50))
             ->addStage(
-                    new LoopEffect(
-                            new MovingEffect(
-                                    new RepeatEffect(
-                                            new SolidSegmentEffect(
-                                                    CRGB::White, 5
-                                            ),
-                                            10),
-                                    10,
-                                    0,
-                                    10
-                            )
+                    new MaskEffect(
+                            (new ParallelLedPipeline)
+                                    ->addStage(new SolidEffect(orange))
+                                    ->addStage(
+                                            new LoopEffect(
+                                                    new MovingEffect(
+                                                            new RepeatEffect(
+                                                                    new SolidSegmentEffect(
+                                                                            CRGB::White, 5
+                                                                    ),
+                                                                    10),
+                                                            10,
+                                                            0,
+                                                            20
+                                                    ),
+                                                    2
+                                            )
+                                    ),
+                            new LoopEffect(
+                                    (new SeriesLedPipeline())
+                                            ->addStage(new FadeInEffect(
+                                                    1
+                                            ))
+                                            ->addStage(new FadeOutEffect(
+                                                    2
+                                            ))),
+                            true
                     )
+            )
+//            ->addStage(new SolidSegmentEffect(CRGB::Blue, 50))
+//            ->addStage(
+//                    new LoopEffect(
+//                            new MovingEffect(
+//                                    new RepeatEffect(
+//                                            new SolidSegmentEffect(
+//                                                    CRGB::White, 5
+//                                            ),
+//                                            10),
+//                                    10,
+//                                    0,
+//                                    20
+//                            ),
+//                            2
+//                    )
+//            )
 
-            );
+            ;
 
 
 

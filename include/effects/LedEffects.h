@@ -5,8 +5,6 @@
 
 // wrapper effects
 #include "AbsolutePositionEffect.h"
-#include "FadeInEffect.h"
-#include "FadeOutEffect.h"
 #include "LoopEffect.h"
 #include "MovingEffect.h"
 #include "OffsetEffect.h"
@@ -14,6 +12,13 @@
 #include "OpacityScalingEffect.h"
 #include "RepeatEffect.h"
 #include "TimeBoxedEffect.h"
+
+
+// mask effects
+#include "MaskEffect.h"
+#include "FadeInEffect.h"
+#include "FadeOutEffect.h"
+
 
 
 // basic effects

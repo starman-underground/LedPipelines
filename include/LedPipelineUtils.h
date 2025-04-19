@@ -19,10 +19,11 @@ enum LedPipelinesSmoothingType {
 };
 
 
-int interpolate (LedPipelinesSmoothingType type, int oldStart, int oldEnd, int newStart, int newEnd, int amount);
 
+float interpolate (LedPipelinesSmoothingType type, float oldStart, float oldEnd, float newStart, float newEnd, float amount);
 
-int interpolate(LedPipelinesSmoothingType type, int newStart, int newEnd, float amount);
+float interpolate(LedPipelinesSmoothingType type, float newStart, float newEnd, float amount);
+
 
 struct LPLogger {
 
@@ -109,6 +110,7 @@ enum BlendingMode {
     OVERWRITE,
     ADD,
     MULTIPLY,
+    MASK,
 };
 
 
@@ -179,7 +181,7 @@ public:
     /**
      * Constructor for creating LED data. Will create a buffer dynamically based on how many LEDs are added in
      */
-    TemporaryLedData();
+    TemporaryLedData(CRGB color = CRGB::Black);
 
     ~TemporaryLedData();
 

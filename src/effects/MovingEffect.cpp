@@ -21,12 +21,12 @@ void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 
     if (ledsPerSecond < 0) {
         if (this->currentPosition <= this->endPosition) {
-            this->running = DONE;
+            this->running = this->stage->running;
             return;
         }
     } else {
         if (this->currentPosition >= this->endPosition) {
-            this->running = DONE;
+            this->running = this->stage->running;
             return;
         }
     }

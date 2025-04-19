@@ -29,27 +29,36 @@ void LPLogger::logInternal(LedPipelinesLogLevel logLevel, String &log) {
     }
 }
 
-int interpolate(LedPipelinesSmoothingType type, int oldStart, int oldEnd, int newStart, int newEnd, int amount) {
-    float floatAmount = ((float) (amount - oldStart) / (float) (oldEnd - oldStart));
+float interpolate(
+        LedPipelinesSmoothingType type,
+        float oldStart,
+        float oldEnd,
+        float newStart,
+        float newEnd,
+        float amount
+) {
+    float oldRange = (oldEnd - oldStart);
+    float amountInRange = (amount - oldStart);
+    float floatAmount = (amountInRange / oldRange);
     return interpolate(type, newStart, newEnd, floatAmount);
 }
 
 
-int interpolate(LedPipelinesSmoothingType type, int newStart, int newEnd, float amount) {
+float interpolate(LedPipelinesSmoothingType type, float newStart, float newEnd, float amount) {
     switch (type) {
         case LINEAR:
             // f(x) = x, so we don't do anything.
             break;
         case SINE:
             // f(x) = sin(pi * x / 2)
-            amount = sin(PI * amount / 2);
+            amount = sinf(PI * amount / 2);
             break;
         case SMOOTH_LINEAR:
             // f(x) = 0.5 * cos(pi * x + pi) + 0.5
-            amount = 0.5 * cos(PI * amount + PI) + 0.5;
+            amount = 0.5f * cosf(PI * amount + PI) + 0.5f;
             break;
     }
-    return (int) (newStart + (newEnd - newStart) * amount);
+    return (newStart + (newEnd - newStart) * amount);
 }
 
 CRGB operator*(const CRGB first, const CRGB second) {
@@ -95,11 +104,11 @@ void TemporaryLedData::initialize() {
     }
 }
 
-TemporaryLedData::TemporaryLedData() {
+TemporaryLedData::TemporaryLedData(CRGB color) {
     data = new CRGB[size];
     opacity = new uint8_t[size];
     for (int i = 0; i < size; i++) {
-        (*this)[i] = CRGB::Black;
+        (*this)[i] = color;
         opacity[i] = false;
     }
 }
@@ -117,7 +126,7 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
         auto B_alpha = other.opacity[i];
         auto B_rgb = other.data[i];
         // if other pixel has no opacity, we skip this pixel.
-        if (!other.opacity[i])
+        if (!other.opacity[i] && blendingMode != MASK)
             continue;
 
         this->anyAreModified = true;
@@ -139,6 +148,12 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
                 this->data[i].g = ((255 - B_alpha) * A_rgb.g + B_alpha * B_rgb.g) / 255;
                 this->data[i].b = ((255 - B_alpha) * A_rgb.b + B_alpha * B_rgb.b) / 255;
                 this->opacity[i] = B_alpha + ((255 - B_alpha) * A_alpha) / 255;
+                break;
+            case MASK:
+                // in mask mode, let through everywhere that has 100% opacity
+                // and nothing through where the mask has 0% opacity.
+                // mask colors don't do anything here (yet).
+                this->opacity[i] = (A_alpha * B_alpha) / 255;
                 break;
         }
     }

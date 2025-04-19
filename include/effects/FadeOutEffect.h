@@ -3,12 +3,20 @@
 
 #include "BaseEffect.h"
 
-class FadeOutEffect : public WrapperEffect, TimedEffect {
 
+class FadeOutEffect : public BaseLedPipelineStage, TimedEffect {
 
 public:
-    float startOffsetSeconds;
     float fadeTime;
+    LedPipelinesSmoothingType smoothingType;
+
+    FadeOutEffect(
+            float fadeTime,
+            LedPipelinesSmoothingType smoothingType = SMOOTH_LINEAR);
+
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
+
+    void reset() override;
 
 
 };

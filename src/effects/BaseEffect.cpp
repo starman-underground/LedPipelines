@@ -15,7 +15,7 @@ void WrapperEffect::reset() {
 }
 
 
-TimedEffect::TimedEffect(long timeToRunMillis) : timeToRunMillis(timeToRunMillis) {}
+TimedEffect::TimedEffect(float timeToRunSeconds) : timeToRunSeconds(timeToRunSeconds) {}
 
 void TimedEffect::reset() {
     this->elapsedPercentage = 0;
