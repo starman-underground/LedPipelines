@@ -1,5 +1,7 @@
 #include "effects/FadeInEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 FadeInEffect::FadeInEffect(
         float fadeTime,

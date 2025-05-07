@@ -1,3 +1,4 @@
 .pio
-
+# for pio pkg pack
+*.gz
 .idea

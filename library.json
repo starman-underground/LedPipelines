@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "LedPipelines",
+  "version": "0.0.2",
+  "description": "A library built on top of FastLED that allows for better and easier building of complex LED effects.",
+  "keywords": "led pipelines, ledpipelines, pipelines, led effects, effects, fast led pipelines, fast led effects",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheVizWiz/LedPipelines"
+  },
+  "authors": [
+    {
+      "name": "TheVizWiz",
+      "url": "https://vibhu.dev"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": "*",
+  "platforms": "*",
+  "export": {
+    "include": [
+      "**/examples/*",
+      "**/include/*",
+      "**/src/*"
+    ],
+    "exclude": [
+      "**/src/main.cpp"
+    ]
+  },
+  "examples": [
+    {
+      "name": "001. Basic Full Solid Color",
+      "files": ["001_basic_full_solid_color.cpp"],
+      "base": "examples/001_basic_full_solid_color"
+    }
+  ]
+}

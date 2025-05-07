@@ -1,8 +1,7 @@
-
-
-
 #include "effects/OpacityGradientEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 OpacityGradientEffect::OpacityGradientEffect(BaseLedPipelineStage *stage, int fadeLength, int startIndex,
                                              LedPipelinesSmoothingType smoothingType)

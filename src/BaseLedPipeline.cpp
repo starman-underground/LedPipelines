@@ -1,6 +1,7 @@
 
 #include "BaseLedPipeline.h"
 
+using namespace ledpipelines;
 
 BaseLedPipelineStage::BaseLedPipelineStage(BlendingMode blendingMode)
         : blendingMode(blendingMode),

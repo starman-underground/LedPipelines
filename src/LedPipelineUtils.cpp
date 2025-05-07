@@ -1,6 +1,8 @@
 
 #include "LedPipelineUtils.h"
 
+using namespace ledpipelines;
+
 
 LedPipelinesLogLevel LPLogger::logLevel = Debug;
 
@@ -217,7 +219,11 @@ void TemporaryLedData::populateFastLed() const {
     int currentLed = 0;
     for (int i = 0; i < FastLED.count(); i++) {
         for (int j = 0; j < FastLED[i].size(); (j++, currentLed++)) {
-            FastLED[i][j] = (*this)[currentLed];
+            FastLED[i][j] = CRGB(
+                    (this->get(currentLed).red * this->getOpacity(currentLed) / 255),
+                    (this->get(currentLed).green * this->getOpacity(currentLed) / 255),
+                    (this->get(currentLed).blue * this->getOpacity(currentLed) / 255)
+            );
         }
     }
 }
@@ -225,7 +231,7 @@ void TemporaryLedData::populateFastLed() const {
 void TemporaryLedData::printData() const {
     String data = "";
     for (int i = 0; i < size; i++) {
-        data += colorToHex(this->data[i], this->opacity[i]) + " ";
+        data += ledpipelines::colorToHex(this->data[i], this->opacity[i]) + " ";
     }
     LPLogger::log(data);
 }

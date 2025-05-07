@@ -1,5 +1,7 @@
 #include "effects/TimeBoxedEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 TimeBoxedEffect::TimeBoxedEffect(BaseLedPipelineStage *stage, float timeToRunSeconds)
         : WrapperEffect(stage), TimedEffect(timeToRunSeconds) {}

@@ -1,5 +1,7 @@
 #include "effects/BaseEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 WrapperEffect::WrapperEffect(BaseLedPipelineStage *stage) :
         BaseLedPipelineStage(stage->blendingMode),

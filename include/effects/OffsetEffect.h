@@ -3,13 +3,16 @@
 
 #include "BaseEffect.h"
 
-class OffsetEffect : public WrapperEffect {
+namespace ledpipelines::effects {
+    class OffsetEffect : public WrapperEffect {
 
-public:
-    int offset;
+    public:
+        int offset;
 
-public:
-     OffsetEffect(BaseLedPipelineStage *stage, int offset);
+    public:
+        OffsetEffect(BaseLedPipelineStage *stage, int offset);
 
-     void calculate(int startIndex, TemporaryLedData &tempData) override;
-};
+        void calculate(int startIndex, TemporaryLedData &tempData) override;
+    };
+
+}

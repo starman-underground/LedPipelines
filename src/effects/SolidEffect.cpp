@@ -1,20 +1,24 @@
-
-
 #include "effects/SolidEffect.h"
 
-SolidEffect::SolidEffect(CRGB color) : BaseLedPipelineStage(NORMAL), color(color) {
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
+
+SolidEffect::SolidEffect(CRGB color, uint8_t opacity) :
+        BaseLedPipelineStage(NORMAL),
+        color(color),
+        opacity(opacity) {
     this->running = RUNNING;
 }
 
 void SolidEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     for (int i = startIndex; i < TemporaryLedData::size; i++) {
-        tempData.set(i, color);
+        tempData.set(i, color, opacity);
     }
 }
 
 
-SolidSegmentEffect::SolidSegmentEffect(CRGB color, int segmentLength)
-        : SolidEffect(color),
+SolidSegmentEffect::SolidSegmentEffect(CRGB color, int segmentLength, uint8_t opacity)
+        : SolidEffect(color, opacity),
           segmentLength(segmentLength) {}
 
 void SolidSegmentEffect::calculate(int startIndex, TemporaryLedData &tempData) {

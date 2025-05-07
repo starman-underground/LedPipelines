@@ -1,6 +1,9 @@
 
 #include "effects/MovingEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
+
 MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int startPosition, int endPosition)
         : WrapperEffect(stage),
           currentPosition(0),

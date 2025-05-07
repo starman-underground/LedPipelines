@@ -1,5 +1,7 @@
 #include "effects/LoopEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 LoopEffect::LoopEffect(BaseLedPipelineStage *stage, size_t numLoops) :
         WrapperEffect(stage),
@@ -40,6 +42,6 @@ void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
         this->running = RUNNING;
         this->stage->reset();
         // since the stage might not calculate anything in done, we need to redo the stage.
-        this->stage->calculate(startIndex, tempData);
+//        this->stage->calculate(startIndex, tempData);
     }
 }

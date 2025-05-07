@@ -2,7 +2,7 @@
 
 #include "BaseEffect.h"
 
-
+namespace ledpipelines::effects {
 class TimeBoxedEffect : public WrapperEffect, public TimedEffect {
 
 public:
@@ -12,3 +12,5 @@ public:
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 };
+
+}

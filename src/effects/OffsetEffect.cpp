@@ -1,5 +1,7 @@
 #include "effects/OffsetEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 OffsetEffect::OffsetEffect(BaseLedPipelineStage *stage, int offset)
         : WrapperEffect(stage),

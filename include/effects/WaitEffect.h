@@ -4,13 +4,15 @@
 
 #include "BaseEffect.h"
 
-class WaitEffect : public BaseLedPipelineStage, TimedEffect {
-public:
+namespace ledpipelines::effects {
+    class WaitEffect : public BaseLedPipelineStage, TimedEffect {
+    public:
 
-    WaitEffect(float waitTimeSeconds);
+        WaitEffect(float waitTimeSeconds);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+        void calculate(int startIndex, TemporaryLedData &tempData) override;
 
-    void reset() override;
+        void reset() override;
 
-};
+    };
+}

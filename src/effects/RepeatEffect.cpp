@@ -1,5 +1,8 @@
 #include "effects/RepeatEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
+
 RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int numRepeats)
         : WrapperEffect(stage),
           numRepeats(numRepeats),

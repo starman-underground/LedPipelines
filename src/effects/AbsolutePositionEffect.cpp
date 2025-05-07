@@ -1,7 +1,7 @@
-#pragma once
-
-
 #include "effects/AbsolutePositionEffect.h"
+
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 AbsolutePositionEffect::AbsolutePositionEffect(BaseLedPipelineStage *stage, int startPosition)
         : WrapperEffect(stage), startPosition(startPosition) {}

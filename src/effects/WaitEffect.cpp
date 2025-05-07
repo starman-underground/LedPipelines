@@ -1,5 +1,8 @@
 #include "effects/WaitEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
+
 
 WaitEffect::WaitEffect(float waitTimeSeconds) : TimedEffect(waitTimeSeconds) {}
 
@@ -19,7 +22,7 @@ void WaitEffect::calculate(int startIndex, TemporaryLedData &tempData) {
         return;
     }
 
-    this->elapsedPercentage = ((float) totalTimeWaited / 1000.0) / this->timeToRunSeconds; // convert ms to seconds
+    this->elapsedPercentage = ((float) totalTimeWaited / 1000.0f) / this->timeToRunSeconds; // convert ms to seconds
     this->running = RUNNING;
 }
 

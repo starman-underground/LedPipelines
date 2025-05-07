@@ -1,5 +1,7 @@
 #include "effects/FadeOutEffect.h"
 
+using namespace ledpipelines;
+using namespace ledpipelines::effects;
 
 FadeOutEffect::FadeOutEffect(
         float fadeTime,
@@ -23,6 +25,11 @@ void FadeOutEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 
     // in this case, we have already finished fading, and can stop here.
     if (timeFadingSeconds >= timeToRunSeconds) {
+        // when it's done, we still have to set it to done for the last frame.
+        // so opacity is set to 0.
+        for (int i = 0; i < TemporaryLedData::size; i++) {
+            tempData.opacity[i] = 0;
+        }
         elapsedPercentage = 1;
         this->running = DONE;
         return;

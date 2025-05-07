@@ -3,12 +3,15 @@
 
 #include "BaseEffect.h"
 
-class AbsolutePositionEffect : public WrapperEffect{
+namespace ledpipelines::effects {
 
-public:
-    int startPosition;
+    class AbsolutePositionEffect : public WrapperEffect {
 
-    explicit AbsolutePositionEffect(BaseLedPipelineStage *stage, int startPosition = 0);
+    public:
+        int startPosition;
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
-};
+        explicit AbsolutePositionEffect(BaseLedPipelineStage *stage, int startPosition = 0);
+
+        void calculate(int startIndex, TemporaryLedData &tempData) override;
+    };
+}

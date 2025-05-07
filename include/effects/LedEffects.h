@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "BaseEffect.h"
 
 // wrapper effects
