@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
   "name": "LedPipelines",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A library built on top of FastLED that allows for better and easier building of complex LED effects.",
   "keywords": "led pipelines, ledpipelines, pipelines, led effects, effects, fast led pipelines, fast led effects",
   "repository": {
@@ -30,8 +30,17 @@
   "examples": [
     {
       "name": "001. Basic Full Solid Color",
-      "files": ["001_basic_full_solid_color.cpp"],
-      "base": "examples/001_basic_full_solid_color"
+      "base": "examples/001_basic_full_solid_color",
+      "files": [
+        "001_basic_full_solid_color.cpp"
+      ]
+    },
+    {
+      "name": "002. Cycling Through Red Green and Blue Colors",
+      "base": "examples/002_cycle_rgb_full_strip",
+      "files": [
+        "002_cycle_rgb_full_strip.cpp"
+      ]
     }
   ]
 }

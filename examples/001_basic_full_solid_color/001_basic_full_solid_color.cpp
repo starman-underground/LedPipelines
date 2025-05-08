@@ -3,6 +3,17 @@
 
 #define LED_PIN 5 // the pin we're attaching our LEDs to.
 
+
+/**
+ * 001 - Full Solid Color.
+ *
+ * The most basic effect you could make is the full solid color effect, where the entire strip is lit up in a single
+ * color. To do this, we'll learn:
+ * - how to create an Led Pipeline
+ * - how to add an effect to a pipeline
+ * - how to run a pipeline to make effects show up on your LEDs.
+ */
+
 /**
  * LedPipelines depends on FastLED. To use FastLED, first declare all the LEDs that you would like to use. In this case,
  * we are declaring an array of 100 LEDs.
