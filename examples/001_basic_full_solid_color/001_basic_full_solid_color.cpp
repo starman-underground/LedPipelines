@@ -7,6 +7,9 @@
 /**
  * 001 - Full Solid Color.
  *
+ * WHAT WE'RE BUILDING:
+ * A very simple effect that just lights up the entire strip in a single color
+ *
  * The most basic effect you could make is the full solid color effect, where the entire strip is lit up in a single
  * color. To do this, we'll learn:
  * - how to create an Led Pipeline
@@ -21,9 +24,11 @@
 CRGB leds[100];
 
 /**
- * This object will store our LedPipeline once we initialize it.
+ * This object will store our pipeline once we initialize it. All objects in LedPipelines derive from the base class of
+ * BaseLedPipelineStage, so no matter what our pipeline looks like, we can use BaseLedPipelineStage to store it. Since
+ * BaseLedPipelineStage is an abstract class, we need to use a pointer here.
  */
-ledpipelines::LedPipeline *pipeline;
+ledpipelines::BaseLedPipelineStage *pipeline;
 
 
 void setup() {
@@ -41,45 +46,32 @@ void setup() {
      */
     ledpipelines::initialize();
 
-
     /**
-     * An LedPipeline pipeline is a building block to build effects. LedPipelines are made up of multiple stages. Each
-     * stage is its own effect, and can be anything - even another LedPipeline!. LedPipelines comes with a collection of
-     * useful basic stages that can be added together and combined to create intricate effects out of the box, with full
-     * customization.
+     * LedPipelines is set up around the idea of stages, which are building blocks used to make effects. The most basic
+     * LedPipelineStage is a single effect that does one thing, like light up the entire strip in a single color. However,
+     * many times, you might want to make effects that are made up of multiple other effects internally. To make those kinds
+     * of effects, you can use actual pipelines, such as SeriesLedPipeline and ParallelLedPipeline. We'll dive into these
+     * in future tutorials, such as 002, which will walk through a SeriesLedPipeline.
      *
-     * There are two basic types of LedPipelines - the ParallelLedPipeline and SeriesLedPipeline. Parallel pipelines
-     * run all of their stages at the same time, layering them on top of one another. You can think of this like layers
-     * in Photoshop. Series pipelines wait for each effect to finish before moving on to the next.
-     *
-     * Since we're only going to be adding a single stage, it doesn't matter which pipeline type we pick. We'll go with
-     * ParallelLedPipeline to start with.
+     * For now, we just want to use a single effect that sets up the entire strip to run in a single color, so we only need
+     * the one effect/stage. In LedPipelines, the effect that lights up the entire strip in a single color is called
+     * SolidEffect. We can set the pipeline to be the one stage that we want, by also passing in the color that we want
+     * to set it to.
      */
-    pipeline = new ledpipelines::ParallelLedPipeline();
-
-    /**
-     * The first (and only) effect that we'll add is a solid effect. Solid effects take in the color of the effect. In
-     * this case, the color is red.
-     */
-     auto solidColorEffect = new ledpipelines::effects::SolidEffect(CRGB::Red);
-
-    /**
-     * When adding a stage to a pipeline, we use the addStage() method. LedPipelines take ownership of all the stages
-     * that get added to them, and make sure they clean up all their resources. We pass in the effect that we created.
-     * We could also do all of this in one line instead if we wanted to, but I've separated the effect to it's own
-     * variable for clarity.
-     *
-     * Fun fact! addStage() returns a reference to the pipeline that you called it on, so you can chain multiple
-     * addStage() calls together. You can see this in some of the other examples.
-     */
-     pipeline->addStage(solidColorEffect);
+    pipeline = new ledpipelines::effects::SolidEffect(CRGB::Red);
 }
 
 
 void loop() {
     /**
-     * To run the effects in your LedPipeline, simply use the run() method on the pipeline. Call this method as often
+     * To run the effects in your pipeline, simply use the run() method on the pipeline. Call this method as often
      * as possible. It is blocking, and will also call FastLED.show();
      */
     pipeline->run();
 }
+
+/**
+ * As we can see, setting up single effects is super easy! But that's not where LedPipelines shines. LedPipelines is really
+ * meant for situations where we have multiple effects that we want to combine to make complicated, intricate designs
+ * on LEDs. We will start doing this in the next tutorial, 002.
+ */

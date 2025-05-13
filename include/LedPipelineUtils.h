@@ -116,20 +116,20 @@ namespace ledpipelines {
     };
 
 
-/**
- * Convert a Color and opacity to a hex code, in form FFFFFFFF, or RGBA.
- * @param color the color to convert, in RGB form.
- * @param opacity the opacity of the color to convert.
- * @return the color in Hex form in a string.
- */
+    /**
+     * Convert a Color and opacity to a hex code, in form FFFFFFFF, or RGBA.
+     * @param color the color to convert, in RGB form.
+     * @param opacity the opacity of the color to convert.
+     * @return the color in Hex form in a string.
+     */
     String colorToHex(CRGB color, uint8_t opacity);
 
 
-/**
- * A class representing a buffer of data used to build out effects. Each effect populates
- * a buffer passed to it in its calculate() method. Buffers are meant to be short lived.
- * They hold enough information for every LED in FastLED, including multiple strips.
- */
+    /**
+     * A class representing a buffer of data used to build out effects. Each effect populates
+     * a buffer passed to it in its calculate() method. Buffers are meant to be short lived.
+     * They hold enough information for every LED in FastLED, including multiple strips.
+     */
     class TemporaryLedData {
 
     private:

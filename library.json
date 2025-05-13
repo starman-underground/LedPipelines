@@ -27,6 +27,15 @@
       "**/src/main.cpp"
     ]
   },
+  "dependencies": [
+    {
+      "name": "FastLED",
+      "owner": "fastled"
+    }
+  ],
+  "headers": [
+    "LedPipelines.h"
+  ],
   "examples": [
     {
       "name": "001. Basic Full Solid Color",

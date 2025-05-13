@@ -15,6 +15,17 @@ void BaseLedPipelineStage::reset() {
     this->running = NOT_STARTED;
 }
 
+void BaseLedPipelineStage::run() {
+    if (this->running == DONE) {
+        return;
+    }
+    FastLED.clear();
+    TemporaryLedData data = TemporaryLedData();
+    this->calculate(0, data);
+    data.populateFastLed();
+    FastLED.show();
+}
+
 LedPipeline::LedPipeline(BlendingMode mode) : BaseLedPipelineStage(mode) {}
 
 LedPipeline::~LedPipeline() {
@@ -30,18 +41,6 @@ LedPipeline *LedPipeline::addStage(BaseLedPipelineStage *stage) {
         this->lastStage = stage;
     }
     return this;
-}
-
-
-void LedPipeline::run() {
-    if (this->running == DONE) {
-        return;
-    }
-    FastLED.clear();
-    TemporaryLedData data = TemporaryLedData();
-    this->calculate(0, data);
-    data.populateFastLed();
-    FastLED.show();
 }
 
 void LedPipeline::reset() {

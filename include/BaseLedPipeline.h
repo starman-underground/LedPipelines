@@ -14,6 +14,8 @@ namespace ledpipelines {
     class BaseLedPipelineStage {
     public:
 
+        float startTimeSeconds;
+
         LedPipelineRunningState running = NOT_STARTED;
 
         BlendingMode blendingMode;
@@ -21,6 +23,8 @@ namespace ledpipelines {
         BaseLedPipelineStage *nextStage = nullptr;
 
         virtual void calculate(int startIndex, TemporaryLedData &tempData) = 0;
+
+        virtual void run();
 
         virtual void reset();
 
@@ -40,11 +44,9 @@ namespace ledpipelines {
 
         virtual LedPipeline *addStage(BaseLedPipelineStage *stage);
 
-        virtual void run();
-
         void reset() override;
 
-        LedPipeline(BlendingMode mode);
+        explicit LedPipeline(BlendingMode mode);
 
         ~LedPipeline() override;
 

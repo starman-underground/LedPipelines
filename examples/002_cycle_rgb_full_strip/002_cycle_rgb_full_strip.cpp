@@ -33,7 +33,7 @@ CRGB leds[100];
 /**
  * This object will store our LedPipeline once we initialize it.
  */
-LedPipeline *pipeline;
+BaseLedPipelineStage *pipeline;
 
 
 void setup() {
@@ -82,38 +82,41 @@ void setup() {
      *
      * Let's set up the blue and green effects. I'll do these on one line, just to show what that looks like.
      */
-     auto greenEffectLimited = new TimeBoxedEffect(new SolidEffect(CRGB::Green), 2);
-     auto blueEffectLimited = new TimeBoxedEffect(new SolidEffect(CRGB::Blue), 2);
+    auto greenEffectLimited = new TimeBoxedEffect(new SolidEffect(CRGB::Green), 2);
+    auto blueEffectLimited = new TimeBoxedEffect(new SolidEffect(CRGB::Blue), 2);
 
 
-     /**
-      * Now that we have all of our effects, we can think about the next part - making them play one at a time, and then
-      * loop back around. When we set up more complicated effects like this, the order that we set up our pipelines matters
-      * for what the final effect will look like. To make this effect, we'll need to use two new things: a SeriesLedPipeline,
-      * and a LoopEffect.
-      *
-      * The SeriesLedPipeline will run all of its stages, one at a time. It'll run each stage until the stage says that
-      * it's done. In this case, if we add a TimeBoxedEffect, it'll run until the TimeBoxedEffect finishes, then move on
-      * to the next stage, and so on.
-      *
-      * The LoopEffect is another WrapperEffect that will run the effect that it wraps until the internal effect finishes,
-      * and then run it again. And again. It'll run a specified number of times, or it'll run it until an indefinite number
-      * of times if no number is specified.
-      *
-      *
-      * Here, we have a choice - we could:
-      * 1. add all the R/G/B TimeBoxedEffects to the SeriesLedPipeline, and then wrap it in a LoopEffect.
-      * 2. wrap each R/G/B TimeBoxedEffect in a LoopEffect, and then add each LoopEffect to a SeriesLedPipeline.
-      *
-      * If we think about the control flow of option 2, it'll try to run the first stage in the pipeline, which would
-      * loop the TimeBoxed red effect until it finishes, and then loop over it again, and again, and again. That's not
-      * what we want. We want to play all three R/G/B effects, and then loop all of them. So we want option 1. Here's
-      * what that looks like:
-      */
+    /**
+     * Now that we have all of our effects, we can think about the next part - making them play one at a time, and then
+     * loop back around. When we set up more complicated effects like this, the order that we set up our pipelines matters
+     * for what the final effect will look like. To make this effect, we'll need to use two new things: a SeriesLedPipeline,
+     * and a LoopEffect.
+     *
+     * The SeriesLedPipeline will run all of its stages, one at a time. It'll run each stage until the stage says that
+     * it's done. In this case, if we add a TimeBoxedEffect, it'll run until the TimeBoxedEffect finishes, then move on
+     * to the next stage, and so on.
+     *
+     * The LoopEffect is another WrapperEffect that will run the effect that it wraps until the internal effect finishes,
+     * and then run it again. And again. It'll run a specified number of times, or it'll run it until an indefinite number
+     * of times if no number is specified.
+     *
+     *
+     * Here, we have a choice - we could:
+     * 1. add all the R/G/B TimeBoxedEffects to the SeriesLedPipeline, and then wrap it in a LoopEffect.
+     * 2. wrap each R/G/B TimeBoxedEffect in a LoopEffect, and then add each LoopEffect to a SeriesLedPipeline.
+     *
+     * If we think about the control flow of option 2, it'll try to run the first stage in the pipeline, which would
+     * loop the TimeBoxed red effect until it finishes, and then loop over it again, and again, and again. That's not
+     * what we want. We want to play all three R/G/B effects, and then loop all of them. So we want option 1. Here's
+     * what that looks like:
+     */
 
-     auto loopingRGBEffect = new LoopEffect(
-             // inside the loop effect, we can supply the pipeline we talked about before. Like we mentioned in 001, we
-             // can do this inside the LoopEffect itself by chaining addStage calls.
+     pipeline = new LoopEffect(
+             /**
+              * inside the loop effect, we can supply the pipeline we talked about before. We could set up another variable
+              * for the internal pipeline, and then add each stage separately, but the addStage method returns a reference
+              * to the pipeline itself so that we can chain multiple calls.
+              */
              (new SeriesLedPipeline) // yes, the parentheses here are required :(
                      ->addStage(redEffectLimited)
                      ->addStage(greenEffectLimited)
@@ -122,16 +125,17 @@ void setup() {
 
 
     /**
-     * Sick! Now that we have our looping effect set up, let's add it to our main pipeline, just like we did in
-     * 001. Since we're using just the one loopingRGBEffect, it doesn't matter if we use a parallel or series pipeline.
-     * It only matters if there's more than one stage (like in the above pipeline). If we used parallel instead of series
-     * above, then it would have tried to run all R+G+B stages at the same time, and since all of them are at full
-     * opacity, we would have only seen the last effect added (which was the blue effect). You can try this for yourself
-     * and see if we get what we expect, by just changing from SeriesLedPipeline to ParallelLedPipeline above!
+     * Let's take a second and talk about why we used a SeriesLedPipeline above. There are two kinds of LedPipelines:
+     * SeriesLedPipelines and ParallelLedPipelines. a SeriesLedPipeline will run the first effect until it completes,
+     * then run the next effect, and so on and so forth. A ParallelLedPipeline will run all of its stages at the same time,
+     * layering them one on top of another in the order that they were added to the pipeline. The layering takes into
+     * account the opacity of each stage/effect/layer and composites them the same way Photoshop would.
+     *
+     * If we used parallel instead of series above, then it would have tried to run all R+G+B stages at the same time,
+     * and since all of them are at full opacity, we would have only seen the last effect added (which was the blue effect).
+     * You can try this for yourself and see if we get what we expect, by just changing from SeriesLedPipeline to
+     * ParallelLedPipeline above!
      */
-
-    pipeline = (new ParallelLedPipeline())
-            ->addStage(loopingRGBEffect);
 }
 
 

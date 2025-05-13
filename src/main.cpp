@@ -13,8 +13,9 @@ using namespace ledpipelines::effects;
 #define HEADER_5_PIN 47
 
 #define HEADER_LED_STRIP_LENGTH 14
+#define EXHAUST_LED_STRIP_LENGTH 24
 
-LedPipeline *pipeline;
+BaseLedPipelineStage *pipeline;
 
 CRGB leds[1000];
 
@@ -42,7 +43,7 @@ void setup() {
     FastLED.addLeds<WS2812B, HEADER_2_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 1, HEADER_LED_STRIP_LENGTH);
     FastLED.addLeds<WS2812B, HEADER_3_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 2, HEADER_LED_STRIP_LENGTH);
     FastLED.addLeds<WS2812B, HEADER_4_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 3, HEADER_LED_STRIP_LENGTH);
-    FastLED.addLeds<WS2812B, HEADER_5_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 4, HEADER_LED_STRIP_LENGTH);
+    FastLED.addLeds<WS2812B, HEADER_5_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 4, EXHAUST_LED_STRIP_LENGTH);
 
     LPLogger::setLogLevel(Debug);
 
@@ -54,17 +55,12 @@ void setup() {
     Serial.println(TemporaryLedData::size);
     const CRGB color = 0xFF2000;
 
-    pipeline = (new SeriesLedPipeline())
-            ->addStage(
-                    new LoopEffect(
-                            (new SeriesLedPipeline)
-                                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Red), 2))
-                                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Green), 2))
-                                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Blue), 2))
-                    )
-            )
-        //
-            ;
+    pipeline = new LoopEffect(
+            (new SeriesLedPipeline)
+                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Red), 2))
+                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Green), 2))
+                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Blue), 2))
+    );
     Serial.println("done initializing pipeline");
     pipeline->reset();
 }
