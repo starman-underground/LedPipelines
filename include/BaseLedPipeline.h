@@ -5,59 +5,59 @@
 
 namespace ledpipelines {
 
-    enum LedPipelineRunningState {
-        NOT_STARTED,
-        RUNNING,
-        DONE
-    };
+enum LedPipelineRunningState {
+    NOT_STARTED,
+    RUNNING,
+    DONE
+};
 
-    class BaseLedPipelineStage {
-    public:
+class BaseLedPipelineStage {
+public:
 
-        float startTimeSeconds;
+    float startTimeSeconds;
 
-        LedPipelineRunningState running = NOT_STARTED;
+    LedPipelineRunningState running = NOT_STARTED;
 
-        BlendingMode blendingMode;
+    BlendingMode blendingMode;
 
-        BaseLedPipelineStage *nextStage = nullptr;
+    BaseLedPipelineStage *nextStage = nullptr;
 
-        virtual void calculate(int startIndex, TemporaryLedData &tempData) = 0;
+    virtual void calculate(int startIndex, TemporaryLedData &tempData) = 0;
 
-        virtual void run();
+    virtual void run();
 
-        virtual void reset();
+    virtual void reset();
 
-        explicit BaseLedPipelineStage(BlendingMode blendingMode = NORMAL);
+    explicit BaseLedPipelineStage(BlendingMode blendingMode = NORMAL);
 
-        virtual ~BaseLedPipelineStage();
-    };
+    virtual ~BaseLedPipelineStage();
+};
 
 
 /**
  * Base abstract class for defining LED pipelines - the construct that can be run
  * and show effects on the
  */
-    class LedPipeline : public BaseLedPipelineStage {
+class LedPipeline : public BaseLedPipelineStage {
 
-    public:
+public:
 
-        virtual LedPipeline *addStage(BaseLedPipelineStage *stage);
+    virtual LedPipeline *addStage(BaseLedPipelineStage *stage);
 
-        void reset() override;
+    void reset() override;
 
-        explicit LedPipeline(BlendingMode mode);
+    explicit LedPipeline(BlendingMode mode);
 
-        ~LedPipeline() override;
+    ~LedPipeline() override;
 
-    protected:
-        /**
-         * linked list of first and last stages. used when adding stages and running them.
-         */
-        BaseLedPipelineStage *firstStage = nullptr;
-        BaseLedPipelineStage *lastStage = nullptr;
+protected:
+    /**
+     * linked list of first and last stages. used when adding stages and running them.
+     */
+    BaseLedPipelineStage *firstStage = nullptr;
+    BaseLedPipelineStage *lastStage = nullptr;
 
-    };
+};
 
 
 /**
@@ -65,33 +65,33 @@ namespace ledpipelines {
  * gets applied first, with other layers getting applied on top. The pipeline continues
  * until all stages have completed.
  */
-    class ParallelLedPipeline : public LedPipeline {
+class ParallelLedPipeline : public LedPipeline {
 
-    public:
-        ParallelLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
+public:
+    ParallelLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
-        void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
 
-    };
+};
 
 /**
  * A pipeline that blocks every stage before it moves on to the next one. The stage must be considered complete (the
  * calculate function must return false) before it moves on to the next stage. This is useful for functions that need
  * to happen one after another, not at the same time.
  */
-    class SeriesLedPipeline : public LedPipeline {
+class SeriesLedPipeline : public LedPipeline {
 
-    public:
+public:
 
-        SeriesLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
+    SeriesLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
-        void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
 
-        void reset() override;
+    void reset() override;
 
-    private:
-        BaseLedPipelineStage *currentStage = nullptr;
-    };
+private:
+    BaseLedPipelineStage *currentStage = nullptr;
+};
 
 
 }

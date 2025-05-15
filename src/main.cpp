@@ -45,7 +45,7 @@ void setup() {
     FastLED.addLeds<WS2812B, HEADER_4_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 3, HEADER_LED_STRIP_LENGTH);
     FastLED.addLeds<WS2812B, HEADER_5_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 4, EXHAUST_LED_STRIP_LENGTH);
 
-    LPLogger::setLogLevel(Debug);
+    LPLogger::initialize(LogLevel::Debug);
 
 //    FastLED.setMaxRefreshRate(60);
 //    FastLED.setBrightness(50);

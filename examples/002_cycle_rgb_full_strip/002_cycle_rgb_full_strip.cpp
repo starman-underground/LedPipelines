@@ -111,17 +111,17 @@ void setup() {
      * what that looks like:
      */
 
-     pipeline = new LoopEffect(
-             /**
-              * inside the loop effect, we can supply the pipeline we talked about before. We could set up another variable
-              * for the internal pipeline, and then add each stage separately, but the addStage method returns a reference
-              * to the pipeline itself so that we can chain multiple calls.
-              */
-             (new SeriesLedPipeline) // yes, the parentheses here are required :(
-                     ->addStage(redEffectLimited)
-                     ->addStage(greenEffectLimited)
-                     ->addStage(blueEffectLimited)
-             );
+    pipeline = new LoopEffect(
+            /**
+             * inside the loop effect, we can supply the pipeline we talked about before. We could set up another variable
+             * for the internal pipeline, and then add each stage separately, but the addStage method returns a reference
+             * to the pipeline itself so that we can chain multiple calls.
+             */
+            (new SeriesLedPipeline) // yes, the parentheses here are required :(
+                    ->addStage(redEffectLimited)
+                    ->addStage(greenEffectLimited)
+                    ->addStage(blueEffectLimited)
+    );
 
 
     /**

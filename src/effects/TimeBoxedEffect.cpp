@@ -1,4 +1,5 @@
 #include "effects/TimeBoxedEffect.h"
+#include "LedPipelinesLogger.h"
 
 using namespace ledpipelines;
 using namespace ledpipelines::effects;

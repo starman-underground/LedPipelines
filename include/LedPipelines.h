@@ -7,7 +7,7 @@
 
 
 namespace ledpipelines {
-    static void initialize() {
-        TemporaryLedData::initialize();
-    }
+static void initialize() {
+    TemporaryLedData::initialize();
+}
 }

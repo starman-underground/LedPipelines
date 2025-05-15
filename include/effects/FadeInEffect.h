@@ -4,21 +4,22 @@
 #include "BaseEffect.h"
 
 namespace ledpipelines::effects {
-    class FadeInEffect : public BaseLedPipelineStage, TimedEffect {
+class FadeInEffect : public BaseLedPipelineStage, TimedEffect {
 
-    public:
-        float fadeTime;
-        LedPipelinesSmoothingType smoothingType;
+public:
+    float fadeTime;
+    SmoothingFunction smoothingFunction;
 
-        FadeInEffect(
-                float fadeTime,
-                LedPipelinesSmoothingType smoothingType = SMOOTH_LINEAR);
+    FadeInEffect(
+            float fadeTime,
+            SmoothingFunction function = SmoothingFunction::SMOOTH_LINEAR
+    );
 
-        void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(int startIndex, TemporaryLedData &tempData) override;
 
-        void reset() override;
+    void reset() override;
 
 
-    };
+};
 
 }

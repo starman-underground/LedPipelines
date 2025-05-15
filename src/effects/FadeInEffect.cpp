@@ -5,10 +5,10 @@ using namespace ledpipelines::effects;
 
 FadeInEffect::FadeInEffect(
         float fadeTime,
-        LedPipelinesSmoothingType smoothingType
+        SmoothingFunction function
 ) :
         TimedEffect(fadeTime),
-        smoothingType(smoothingType) {}
+        smoothingFunction(function) {}
 
 
 void FadeInEffect::calculate(int startIndex, TemporaryLedData &tempData) {
@@ -33,8 +33,7 @@ void FadeInEffect::calculate(int startIndex, TemporaryLedData &tempData) {
         elapsedPercentage = timeFadingSeconds / timeToRunSeconds;
     }
 
-    float opacityMultiplier = interpolate(
-            smoothingType,
+    float opacityMultiplier = smoothingFunction(
             0,
             timeToRunSeconds,
             0,

@@ -4,8 +4,8 @@ using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
 OpacityGradientEffect::OpacityGradientEffect(BaseLedPipelineStage *stage, int fadeLength, int startIndex,
-                                             LedPipelinesSmoothingType smoothingType)
-        : WrapperEffect(stage), fadeLength(fadeLength), smoothingType(smoothingType), startIndex(startIndex) {
+                                             SmoothingFunction smoothingType)
+        : WrapperEffect(stage), fadeLength(fadeLength), smoothingFunction(smoothingType), startIndex(startIndex) {
 
 }
 
@@ -26,8 +26,7 @@ void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData
         tempData.set(
                 startIndex + i * sign + this->startIndex,
                 tempData.get(startIndex + i * sign + this->startIndex),
-                interpolate(
-                        smoothingType,
+                smoothingFunction(
                         0,
                         fadeLength,
                         0,

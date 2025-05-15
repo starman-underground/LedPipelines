@@ -31,3 +31,24 @@ void WaitEffect::reset() {
     BaseLedPipelineStage::reset();
     TimedEffect::reset();
 }
+
+RandomWaitEffect::RandomWaitEffect(float minWaitTime, float maxWaitTime, SamplingFunction function)
+        : BaseLedPipelineStage(),
+          TimedEffect(minWaitTime),
+          minWaitTime(minWaitTime),
+          maxWaitTime(maxWaitTime),
+          samplingFunction(function) {}
+
+void RandomWaitEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+    if (this->running == DONE) {
+        return;
+    }
+
+    if (this->running == NOT_STARTED) {
+        this->running = RUNNING;
+        this->timeToRunSeconds = samplingFunction(minWaitTime, maxWaitTime);
+    }
+
+}
+
+
