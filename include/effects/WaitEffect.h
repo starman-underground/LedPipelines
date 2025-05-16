@@ -17,16 +17,18 @@ public:
 };
 
 
-class RandomWaitEffect : public BaseLedPipelineStage, TimedEffect {
+class RandomWaitEffect : public BaseLedPipelineStage, RandomTimedEffect {
 public:
+    RandomWaitEffect(
+            float minWaitTime,
+            float maxWaitTime,
+            const SamplingFunction& function = SamplingFunction::UNIFORM
+    );
 
-    float minWaitTime;
-    float maxWaitTime;
-
-    SamplingFunction samplingFunction;
-
-    RandomWaitEffect(float minWaitTime, float maxWaitTime,
-                     SamplingFunction function = SamplingFunction::UNIFORM);
+    RandomWaitEffect(
+            float maxWaitTime,
+            const SamplingFunction& function = SamplingFunction::UNIFORM
+    );
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 

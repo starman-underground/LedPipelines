@@ -10,11 +10,11 @@ struct LPLogger {
 private:
     static void logInternal(LogLevel logLevel, String &log);
 
-    static LogLevel logLevel;
+    static LogLevel internalLogLevel;
 
 public:
 
-    static void initialize(LogLevel logLevel) { LPLogger::logLevel = logLevel; }
+    static void initialize(LogLevel logLevel) { LPLogger::internalLogLevel = logLevel; }
 
     static void log(String log) { LPLogger::logInternal(LogLevel::LOG, log); }
 

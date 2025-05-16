@@ -2,8 +2,7 @@
 
 using namespace ledpipelines;
 
-
-
+LogLevel LPLogger::internalLogLevel = LogLevel::Debug;
 
 static String getFormattedTime() {
     unsigned long currentMillis = millis();
@@ -23,7 +22,7 @@ static String getFormattedTime() {
 
 void LPLogger::logInternal(LogLevel logLevel, String &log) {
 
-    if (LPLogger::logLevel < logLevel) {
+    if (LPLogger::internalLogLevel < logLevel) {
         return;
     }
 

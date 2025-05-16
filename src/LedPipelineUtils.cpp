@@ -3,16 +3,6 @@
 
 using namespace ledpipelines;
 
-
-
-
-
-
-
-
-
-
-
 CRGB operator*(const CRGB first, const CRGB second) {
     return CRGB(
             ((size_t) first.r * (size_t) second.r) / 255,

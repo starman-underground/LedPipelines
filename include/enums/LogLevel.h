@@ -48,6 +48,8 @@ public:
             case LOG:
                 return "LOG";
         }
+
+        return "LOG";
     }
 
     operator String() {

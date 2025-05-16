@@ -27,6 +27,29 @@ protected:
     void reset();
 };
 
+
+class RandomTimedEffect : public TimedEffect {
+protected:
+    float minRuntime;
+    float maxRuntime;
+    SamplingFunction samplingFunction;
+
+    RandomTimedEffect(
+            float maxRuntime,
+            SamplingFunction samplingFunction = SamplingFunction::UNIFORM
+    );
+
+    RandomTimedEffect(
+            float minRuntime,
+            float maxRuntime,
+            SamplingFunction samplingFunction = SamplingFunction::UNIFORM
+    );
+
+    void sampleRuntime();
+
+    void reset();
+};
+
 }
 
 
