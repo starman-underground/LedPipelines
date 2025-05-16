@@ -16,7 +16,7 @@ public:
 
     float startTimeSeconds;
 
-    LedPipelineRunningState running = NOT_STARTED;
+    LedPipelineRunningState state = NOT_STARTED;
 
     BlendingMode blendingMode;
 
@@ -52,7 +52,7 @@ public:
 
 protected:
     /**
-     * linked list of first and last stages. used when adding stages and running them.
+     * linked list of first and last stages. used when adding stages and state them.
      */
     BaseLedPipelineStage *firstStage = nullptr;
     BaseLedPipelineStage *lastStage = nullptr;

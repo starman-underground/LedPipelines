@@ -9,27 +9,27 @@ TimeBoxedEffect::TimeBoxedEffect(BaseLedPipelineStage *stage, float timeToRunSec
 
 
 void TimeBoxedEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         LPLogger::log(String("starting time boxed effect. Running for ") + timeToRunSeconds + " seconds");
-        this->running = RUNNING;
+        this->state = RUNNING;
         startTimeMillis = millis();
     }
 
     unsigned long elapsedTime = millis() - startTimeMillis;
     if (elapsedTime / 1000.0 >= timeToRunSeconds) {
-        LPLogger::log("done running time boxed effect.");
+        LPLogger::log("done state time boxed effect.");
         this->elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     }
 
     this->elapsedPercentage = elapsedTime / 1000.0f / timeToRunSeconds;
     this->stage->calculate(startIndex, tempData);
     // if the internal stage is done, we set it to done.
-    if (this->stage->running == DONE) {
-        this->running = DONE;
+    if (this->stage->state == DONE) {
+        this->state = DONE;
     }
 }
 
@@ -54,28 +54,28 @@ RandomTimeBoxedEffect::RandomTimeBoxedEffect(
 ) : WrapperEffect(stage), RandomTimedEffect(minRuntime, maxRuntime, samplingFunction) {}
 
 void RandomTimeBoxedEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         LPLogger::log(String("starting random time boxed effect. Running for ") + timeToRunSeconds + " seconds");
-        this->running = RUNNING;
+        this->state = RUNNING;
         this->sampleRuntime();
         startTimeMillis = millis();
     }
 
     unsigned long elapsedTime = millis() - startTimeMillis;
     if (elapsedTime / 1000.0 >= timeToRunSeconds) {
-        LPLogger::log("done running random time boxed effect.");
+        LPLogger::log("done state random time boxed effect.");
         this->elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     }
 
     this->elapsedPercentage = elapsedTime / 1000.0f / timeToRunSeconds;
     this->stage->calculate(startIndex, tempData);
     // if the internal stage is done, we set it to done.
-    if (this->stage->running == DONE) {
-        this->running = DONE;
+    if (this->stage->state == DONE) {
+        this->state = DONE;
     }
 }
 

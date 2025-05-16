@@ -6,21 +6,23 @@ using namespace ledpipelines::effects;
 MaskEffect::MaskEffect(
         BaseLedPipelineStage *base,
         BaseLedPipelineStage *mask,
+        bool useMaskRuntime,
         bool startFullOpacity
 ) : base(base),
     mask(mask),
+    useMaskRuntime(useMaskRuntime),
     startFullOpacity(startFullOpacity) {
 }
 
 
 void MaskEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 
-    if (this->running == DONE) {
+    if (this->state == DONE) {
         return;
     }
 
-    if (this->running == NOT_STARTED) {
-        this->running = RUNNING;
+    if (this->state == NOT_STARTED) {
+        this->state = RUNNING;
     }
 
     TemporaryLedData maskData = TemporaryLedData();
@@ -36,8 +38,14 @@ void MaskEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     tempData.merge(baseData, this->base->blendingMode);
 
     // The effect finishes when the base is done, so we check if the base effect is done here.
-    if (this->base->running == DONE) {
-        this->running = DONE;
+    if (useMaskRuntime) {
+        if (this->mask->state == DONE) {
+            this->state = DONE;
+        }
+    } else {
+        if (this->base->state == DONE) {
+            this->state = DONE;
+        }
     }
 }
 

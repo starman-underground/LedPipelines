@@ -12,11 +12,11 @@ FadeInEffect::FadeInEffect(
 
 
 void FadeInEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         this->startTimeMillis = millis();
-        this->running = RUNNING;
+        this->state = RUNNING;
     }
 
     unsigned long currentTimeMillis = millis();
@@ -26,10 +26,10 @@ void FadeInEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     // in this case, we have already finished fading, and can stop here.
     if (timeFadingSeconds >= timeToRunSeconds) {
         elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     } else {
-        this->running = RUNNING;
+        this->state = RUNNING;
         elapsedPercentage = timeFadingSeconds / timeToRunSeconds;
     }
 
@@ -61,12 +61,12 @@ RandomFadeInEffect::RandomFadeInEffect(
 
 
 void RandomFadeInEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         this->startTimeMillis = millis();
         this->sampleRuntime();
-        this->running = RUNNING;
+        this->state = RUNNING;
     }
 
     unsigned long currentTimeMillis = millis();
@@ -76,10 +76,10 @@ void RandomFadeInEffect::calculate(int startIndex, ledpipelines::TemporaryLedDat
     // in this case, we have already finished fading, and can stop here.
     if (timeFadingSeconds >= timeToRunSeconds) {
         elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     } else {
-        this->running = RUNNING;
+        this->state = RUNNING;
         elapsedPercentage = timeFadingSeconds / timeToRunSeconds;
     }
 

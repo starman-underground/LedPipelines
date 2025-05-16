@@ -8,7 +8,7 @@ AbsolutePositionEffect::AbsolutePositionEffect(BaseLedPipelineStage *stage, int 
 
 void AbsolutePositionEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     this->stage->calculate(startPosition, tempData);
-    this->running = this->stage->running;
+    this->state = this->stage->state;
 }
 
 

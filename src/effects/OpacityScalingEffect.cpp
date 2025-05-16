@@ -7,11 +7,11 @@ OpacityScalingEffect::OpacityScalingEffect(BaseLedPipelineStage *stage, uint8_t 
         : WrapperEffect(stage), maxOpacity(maxOpacity) {}
 
 void OpacityScalingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE)
+    if (this->state == DONE)
         return;
 
-    if (this->running == NOT_STARTED)
-        this->running = RUNNING;
+    if (this->state == NOT_STARTED)
+        this->state = RUNNING;
 
     LPLogger::log(String("starting opacity scaling with max opacity ") + maxOpacity);
     this->stage->calculate(startIndex, tempData);
@@ -23,5 +23,5 @@ void OpacityScalingEffect::calculate(int startIndex, TemporaryLedData &tempData)
     LPLogger::log("done with opacity scaling");
 
 
-    this->running = this->stage->running;
+    this->state = this->stage->state;
 }

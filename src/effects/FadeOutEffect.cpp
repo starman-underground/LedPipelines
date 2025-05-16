@@ -12,11 +12,11 @@ FadeOutEffect::FadeOutEffect(
 
 
 void FadeOutEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         this->startTimeMillis = millis();
-        this->running = RUNNING;
+        this->state = RUNNING;
     }
 
     unsigned long currentTimeMillis = millis();
@@ -31,10 +31,10 @@ void FadeOutEffect::calculate(int startIndex, TemporaryLedData &tempData) {
             tempData.opacity[i] = 0;
         }
         elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     } else {
-        this->running = RUNNING;
+        this->state = RUNNING;
         elapsedPercentage = timeFadingSeconds / timeToRunSeconds;
     }
 
@@ -65,12 +65,12 @@ RandomFadeOutEffect::RandomFadeOutEffect(
     smoothingFunction(smoothingFunction) {}
 
 void RandomFadeOutEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
-    if (this->running == DONE) return;
+    if (this->state == DONE) return;
 
-    if (this->running == NOT_STARTED) {
+    if (this->state == NOT_STARTED) {
         this->startTimeMillis = millis();
         this->sampleRuntime();
-        this->running = RUNNING;
+        this->state = RUNNING;
     }
 
     unsigned long currentTimeMillis = millis();
@@ -85,10 +85,10 @@ void RandomFadeOutEffect::calculate(int startIndex, ledpipelines::TemporaryLedDa
             tempData.opacity[i] = 0;
         }
         elapsedPercentage = 1;
-        this->running = DONE;
+        this->state = DONE;
         return;
     } else {
-        this->running = RUNNING;
+        this->state = RUNNING;
         elapsedPercentage = timeFadingSeconds / timeToRunSeconds;
     }
 

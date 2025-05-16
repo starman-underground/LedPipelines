@@ -11,11 +11,11 @@ OpacityGradientEffect::OpacityGradientEffect(BaseLedPipelineStage *stage, int fa
 
 
 void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE)
+    if (this->state == DONE)
         return;
 
-    if (this->running == NOT_STARTED) {
-        this->running = RUNNING;
+    if (this->state == NOT_STARTED) {
+        this->state = RUNNING;
     }
 
 
@@ -36,5 +36,5 @@ void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData
         );
     }
 
-    this->running = this->stage->running;
+    this->state = this->stage->state;
 }

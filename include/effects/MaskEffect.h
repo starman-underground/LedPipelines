@@ -11,10 +11,12 @@ public:
     BaseLedPipelineStage *mask;
     BaseLedPipelineStage *base;
     bool startFullOpacity;
+    bool useMaskRuntime;
 
     MaskEffect(
             BaseLedPipelineStage *base,
             BaseLedPipelineStage *mask,
+            bool useMaskRuntime = false,
             bool startFullOpacity = false
     );
 

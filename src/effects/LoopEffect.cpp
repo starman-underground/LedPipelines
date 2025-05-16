@@ -14,32 +14,32 @@ void LoopEffect::reset() {
 }
 
 void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (running == DONE) {
+    if (state == DONE) {
         return;
     }
 
-    if (this->running == NOT_STARTED)
-        this->running = RUNNING;
+    if (this->state == NOT_STARTED)
+        this->state = RUNNING;
 
     // run the current stage
     stage->calculate(startIndex, tempData);
 
-    // check if the stage is done running. If still running, we return early.
-    if (stage->running != DONE) {
+    // check if the stage is done state. If still state, we return early.
+    if (stage->state != DONE) {
         return;
     }
 
-    // if the current stage is done running, we increase the number of completed loops.
-    // if the number of completed loops is high enough, we stop running the effect.
+    // if the current stage is done state, we increase the number of completed loops.
+    // if the number of completed loops is high enough, we stop state the effect.
     // if the number of loops to run is 0, we run the effect infinitely.
     currentNumLoops++;
     if (numLoops != 0 && currentNumLoops >= numLoops) {
         LPLogger::log("Current stage done, and loops completed.");
-        this->running = DONE;
+        this->state = DONE;
     } else {
         LPLogger::log(String("Current stage done, and looping again. Loops Completed: ")
                       + currentNumLoops + "/" + numLoops);
-        this->running = RUNNING;
+        this->state = RUNNING;
         this->stage->reset();
         // since the stage might not calculate anything in done, we need to redo the stage.
 //        this->stage->calculate(startIndex, tempData);

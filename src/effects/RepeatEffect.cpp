@@ -10,11 +10,11 @@ RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int 
 
 
 void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->running == DONE)
+    if (this->state == DONE)
         return;
 
-    if (this->running == NOT_STARTED)
-        this->running = RUNNING;
+    if (this->state == NOT_STARTED)
+        this->state = RUNNING;
 
 //    // only calculate the data once. We first calculate it at 0, and then shift it by how much
 //    TemporaryLedData stageData = TemporaryLedData();
@@ -55,5 +55,5 @@ void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
             tempData.merge(stageData, this->stage->blendingMode);
         }
     }
-    this->running = this->stage->running;
+    this->state = this->stage->state;
 }

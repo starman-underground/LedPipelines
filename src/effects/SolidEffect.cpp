@@ -7,7 +7,7 @@ SolidEffect::SolidEffect(CRGB color, uint8_t opacity) :
         BaseLedPipelineStage(NORMAL),
         color(color),
         opacity(opacity) {
-    this->running = RUNNING;
+    this->state = RUNNING;
 }
 
 void SolidEffect::calculate(int startIndex, TemporaryLedData &tempData) {
