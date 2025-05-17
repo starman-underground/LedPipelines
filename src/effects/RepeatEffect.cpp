@@ -10,11 +10,11 @@ RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int 
 
 
 void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->state == DONE)
+    if (this->state == LedPipelineRunningState::DONE)
         return;
 
-    if (this->state == NOT_STARTED)
-        this->state = RUNNING;
+    if (this->state == LedPipelineRunningState::NOT_STARTED)
+        this->state =  LedPipelineRunningState::RUNNING;
 
 //    // only calculate the data once. We first calculate it at 0, and then shift it by how much
 //    TemporaryLedData stageData = TemporaryLedData();

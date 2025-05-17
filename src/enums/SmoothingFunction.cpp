@@ -1,10 +1,30 @@
 #include "enums/SmoothingFunction.h"
-#include "math.h"
+#include <cmath>
 
 using namespace ledpipelines;
 
 
 float SmoothingFunction::operator()(float amount, float oldMin, float oldMax, float newMin, float newMax) {
+    /**
+     * min and max aren't guaranteed to actually be min and max. e.g. it could be min < amount < max, OR
+     * max < amount < min. This logic clamps to the range (min, max) regardless of which one is smaller and which one
+     * is larger.
+     */
+    if (oldMin < oldMax) {
+        if (amount < oldMin) {
+            amount = oldMin;
+        } else if (amount > oldMax) {
+            amount = oldMax;
+        }
+    } else {
+        if (amount > oldMin) {
+            amount = oldMin;
+        } else if (amount < oldMax) {
+            amount = oldMax;
+        }
+
+    }
+
     float oldRange = (oldMax - oldMin);
     float amountInRange = (amount - oldMin);
     float percentage = amountInRange / oldRange;

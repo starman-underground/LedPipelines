@@ -14,18 +14,18 @@ void LoopEffect::reset() {
 }
 
 void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (state == DONE) {
+    if (state == LedPipelineRunningState::DONE) {
         return;
     }
 
-    if (this->state == NOT_STARTED)
-        this->state = RUNNING;
+    if (this->state == LedPipelineRunningState::NOT_STARTED)
+        this->state =  LedPipelineRunningState::RUNNING;
 
     // run the current stage
     stage->calculate(startIndex, tempData);
 
     // check if the stage is done state. If still state, we return early.
-    if (stage->state != DONE) {
+    if (stage->state != LedPipelineRunningState::DONE) {
         return;
     }
 
@@ -35,11 +35,11 @@ void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     currentNumLoops++;
     if (numLoops != 0 && currentNumLoops >= numLoops) {
         LPLogger::log("Current stage done, and loops completed.");
-        this->state = DONE;
+        this->state = LedPipelineRunningState::DONE;
     } else {
         LPLogger::log(String("Current stage done, and looping again. Loops Completed: ")
                       + currentNumLoops + "/" + numLoops);
-        this->state = RUNNING;
+        this->state =  LedPipelineRunningState::RUNNING;
         this->stage->reset();
         // since the stage might not calculate anything in done, we need to redo the stage.
 //        this->stage->calculate(startIndex, tempData);

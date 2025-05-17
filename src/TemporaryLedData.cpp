@@ -42,30 +42,30 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
         auto B_alpha = other.opacity[i];
         auto B_rgb = other.data[i];
         // if other pixel has no opacity, we skip this pixel.
-        if (!other.opacity[i] && blendingMode != MASK)
+        if (!other.opacity[i] && blendingMode != BlendingMode::MASK)
             continue;
 
         this->anyAreModified = true;
         switch (blendingMode) {
-            case OVERWRITE:
+            case BlendingMode::OVERWRITE:
                 this->data[i] = B_rgb;
                 this->opacity[i] = B_alpha;
                 break;
-            case ADD:
+            case BlendingMode::ADD:
                 this->data[i] = A_rgb + B_rgb;
                 this->opacity[i] = min(A_alpha + B_alpha, UINT8_MAX);
                 break;
-            case MULTIPLY:
+            case BlendingMode::MULTIPLY:
                 this->data[i] *= A_rgb * B_rgb;
                 this->opacity[i] = (B_alpha * B_alpha) / 255;
                 break;
-            case NORMAL:
+            case BlendingMode::NORMAL:
                 this->data[i].r = ((255 - B_alpha) * A_rgb.r + B_alpha * B_rgb.r) / 255;
                 this->data[i].g = ((255 - B_alpha) * A_rgb.g + B_alpha * B_rgb.g) / 255;
                 this->data[i].b = ((255 - B_alpha) * A_rgb.b + B_alpha * B_rgb.b) / 255;
                 this->opacity[i] = B_alpha + ((255 - B_alpha) * A_alpha) / 255;
                 break;
-            case MASK:
+            case BlendingMode::MASK:
                 // in mask mode, let through everywhere that has 100% opacity
                 // and nothing through where the mask has 0% opacity.
                 // mask colors don't do anything here (yet).
@@ -120,5 +120,5 @@ void TemporaryLedData::printData() const {
     for (int i = 0; i < size; i++) {
         data += ledpipelines::colorToHex(this->data[i], this->opacity[i]) + " ";
     }
-    LPLogger::log(data);
+    LPLogger::debug(data);
 }

@@ -1,9 +1,11 @@
 #include "enums/SamplingFunction.h"
+#include "LedPipelinesLogger.h"
 
 using namespace ledpipelines;
 
 float SamplingFunction::operator()(float min, float max) {
-    float originalRandomValue = random();
+
+    float originalRandomValue = (float) rand() / (float) RAND_MAX;
 
     float randomFunctionOutput;
 

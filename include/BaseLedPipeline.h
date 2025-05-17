@@ -5,18 +5,16 @@
 
 namespace ledpipelines {
 
-enum LedPipelineRunningState {
-    NOT_STARTED,
-    RUNNING,
-    DONE
+enum class LedPipelineRunningState {
+     NOT_STARTED,
+     RUNNING,
+     DONE
 };
 
 class BaseLedPipelineStage {
 public:
 
-    float startTimeSeconds;
-
-    LedPipelineRunningState state = NOT_STARTED;
+    LedPipelineRunningState state =  LedPipelineRunningState::NOT_STARTED;
 
     BlendingMode blendingMode;
 
@@ -28,9 +26,12 @@ public:
 
     virtual void reset();
 
-    explicit BaseLedPipelineStage(BlendingMode blendingMode = NORMAL);
+    explicit BaseLedPipelineStage(BlendingMode blendingMode = BlendingMode::NORMAL);
 
     virtual ~BaseLedPipelineStage();
+
+private:
+    u_int64_t lastUpdateTimeMicros;
 };
 
 

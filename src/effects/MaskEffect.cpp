@@ -6,45 +6,40 @@ using namespace ledpipelines::effects;
 MaskEffect::MaskEffect(
         BaseLedPipelineStage *base,
         BaseLedPipelineStage *mask,
-        bool useMaskRuntime,
-        bool startFullOpacity
+        bool useMaskRuntime
 ) : base(base),
     mask(mask),
-    useMaskRuntime(useMaskRuntime),
-    startFullOpacity(startFullOpacity) {
+    useMaskRuntime(useMaskRuntime) {
 }
 
 
 void MaskEffect::calculate(int startIndex, TemporaryLedData &tempData) {
 
-    if (this->state == DONE) {
+    if (this->state == LedPipelineRunningState::DONE) {
         return;
     }
 
-    if (this->state == NOT_STARTED) {
-        this->state = RUNNING;
+    if (this->state == LedPipelineRunningState::NOT_STARTED) {
+        this->state =  LedPipelineRunningState::RUNNING;
     }
 
     TemporaryLedData maskData = TemporaryLedData();
     TemporaryLedData baseData = TemporaryLedData();
-    for (int i = 0; i < TemporaryLedData::size; i++) {
-        maskData.opacity[i] = this->startFullOpacity ? 255 : 0;
-    }
     this->mask->calculate(startIndex, maskData);
     this->base->calculate(startIndex, baseData);
 
     // merge the two layers.
-    baseData.merge(maskData, MASK);
+    baseData.merge(maskData, BlendingMode::MASK);
     tempData.merge(baseData, this->base->blendingMode);
 
     // The effect finishes when the base is done, so we check if the base effect is done here.
     if (useMaskRuntime) {
-        if (this->mask->state == DONE) {
-            this->state = DONE;
+        if (this->mask->state == LedPipelineRunningState::DONE) {
+            this->state = LedPipelineRunningState::DONE;
         }
     } else {
-        if (this->base->state == DONE) {
-            this->state = DONE;
+        if (this->base->state == LedPipelineRunningState::DONE) {
+            this->state = LedPipelineRunningState::DONE;
         }
     }
 }

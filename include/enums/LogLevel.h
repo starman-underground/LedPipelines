@@ -7,10 +7,10 @@ class LogLevel {
 public:
     enum LogLevel_ {
         NONE,
-        Debug,
         ERROR,
         WARN,
         LOG,
+        Debug,
     };
 
     LogLevel(const LogLevel_ logLevel) : value(logLevel) {}

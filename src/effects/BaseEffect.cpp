@@ -37,8 +37,8 @@ void RandomTimedEffect::sampleRuntime() {
 
 RandomTimedEffect::RandomTimedEffect(float minRuntime, float maxRuntime, SamplingFunction samplingFunction)
         : TimedEffect(0),
-          minRuntime(0),
-          maxRuntime(0),
+          minRuntime(minRuntime),
+          maxRuntime(maxRuntime),
           samplingFunction(samplingFunction) {
 
 }

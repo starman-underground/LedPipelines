@@ -5,24 +5,34 @@ using namespace ledpipelines;
 
 BaseLedPipelineStage::BaseLedPipelineStage(BlendingMode blendingMode)
         : blendingMode(blendingMode),
-          state(NOT_STARTED) {}
+          state(LedPipelineRunningState::NOT_STARTED),
+          lastUpdateTimeMicros(micros()) {}
 
 BaseLedPipelineStage::~BaseLedPipelineStage() {
     delete nextStage;
 }
 
 void BaseLedPipelineStage::reset() {
-    this->state = NOT_STARTED;
+    this->state = LedPipelineRunningState::NOT_STARTED;
 }
 
 void BaseLedPipelineStage::run() {
-    if (this->state == DONE) {
+    if (this->state == LedPipelineRunningState::DONE) {
+        return;
+    }
+
+    auto currentTimeMicros = micros();
+    auto microsSinceLastUpdate = currentTimeMicros - lastUpdateTimeMicros;
+    if (microsSinceLastUpdate > minMicrosBetweenUpdates) {
+        lastUpdateTimeMicros = currentTimeMicros;
+    } else {
         return;
     }
     FastLED.clear();
     TemporaryLedData data = TemporaryLedData();
     this->calculate(0, data);
     data.populateFastLed();
+    data.printData();
     FastLED.show();
 }
 
@@ -55,11 +65,11 @@ void LedPipeline::reset() {
 ParallelLedPipeline::ParallelLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
 
 void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->state == DONE)
+    if (this->state == LedPipelineRunningState::DONE)
         return;
 
-    if (this->state == NOT_STARTED)
-        this->state = RUNNING;
+    if (this->state == LedPipelineRunningState::NOT_STARTED)
+        this->state =  LedPipelineRunningState::RUNNING;
 
     BaseLedPipelineStage *currentStage = firstStage;
 
@@ -67,7 +77,7 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
         LPLogger::warn("no stages in the pipeline.");
     }
 
-    LedPipelineRunningState anyArePlaying = DONE;
+    LedPipelineRunningState anyArePlaying = LedPipelineRunningState::DONE;
     int currentStageNumber = 0;
     while (currentStage != nullptr) {
         TemporaryLedData currentStageData = TemporaryLedData();
@@ -76,7 +86,7 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
 //        currentStageData.printData();
         tempData.merge(currentStageData, currentStage->blendingMode);
 //        tempData.printData();
-        anyArePlaying = currentStage->state != DONE ? RUNNING : anyArePlaying;
+        anyArePlaying = currentStage->state != LedPipelineRunningState::DONE ?  LedPipelineRunningState::RUNNING : anyArePlaying;
         currentStage = currentStage->nextStage;
         currentStageNumber++;
     }
@@ -87,32 +97,32 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
 SeriesLedPipeline::SeriesLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
 
 void SeriesLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->state == DONE)
+    if (this->state == LedPipelineRunningState::DONE)
         return;
 
     // this is the first time we are state, so currentStage hasn't been set to the first stage yet.
-    if (this->state == NOT_STARTED) {
+    if (this->state == LedPipelineRunningState::NOT_STARTED) {
         LPLogger::log("starting series LED pipeline.");
         currentStage = firstStage;
-        this->state = RUNNING;
+        this->state =  LedPipelineRunningState::RUNNING;
     }
 
     // there are no stages in the pipeline. return early.
     if (currentStage == nullptr) {
         LPLogger::warn("No stages in series pipeline. Exiting early.");
-        this->state = DONE;
+        this->state = LedPipelineRunningState::DONE;
         return;
     }
 
     // run the current stage. If the current stage is done state, we set the current stage to the next stage.
     currentStage->calculate(startIndex, tempData);
-    if (currentStage->state == DONE) {
+    if (currentStage->state == LedPipelineRunningState::DONE) {
         currentStage = currentStage->nextStage;
     }
 
     // if the current stage is null, we know that the pipeline is done state. We can set state to false.
     if (currentStage == nullptr) {
-        this->state = DONE;
+        this->state = LedPipelineRunningState::DONE;
         LPLogger::log("Series pipeline is done state.");
     }
 }

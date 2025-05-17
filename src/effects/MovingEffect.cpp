@@ -13,11 +13,11 @@ MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int
           elapsedPercentage(0) {}
 
 void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
-    if (this->state == DONE) return;
+    if (this->state == LedPipelineRunningState::DONE) return;
 
-    if (this->state == NOT_STARTED) {
+    if (this->state == LedPipelineRunningState::NOT_STARTED) {
         this->startTimeMillis = millis();
-        this->state = RUNNING;
+        this->state =  LedPipelineRunningState::RUNNING;
     }
 
     this->currentPosition = (ledsPerSecond * (millis() - this->startTimeMillis) / 1000.0f);
@@ -38,8 +38,8 @@ void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
     int deltaLeds = (int) currentPosition;
     this->elapsedPercentage = this->currentPosition / this->endPosition;
     this->stage->calculate(startIndex + deltaLeds, tempData);
-    if (this->stage->state == DONE) {
-        this->state = DONE;
+    if (this->stage->state == LedPipelineRunningState::DONE) {
+        this->state = LedPipelineRunningState::DONE;
     }
 }
 

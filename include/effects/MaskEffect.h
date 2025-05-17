@@ -10,15 +10,12 @@ class MaskEffect : public BaseLedPipelineStage {
 public:
     BaseLedPipelineStage *mask;
     BaseLedPipelineStage *base;
-    bool startFullOpacity;
     bool useMaskRuntime;
 
     MaskEffect(
             BaseLedPipelineStage *base,
             BaseLedPipelineStage *mask,
-            bool useMaskRuntime = false,
-            bool startFullOpacity = false
-    );
+            bool useMaskRuntime = false);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 

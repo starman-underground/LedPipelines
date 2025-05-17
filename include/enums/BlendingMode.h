@@ -2,7 +2,7 @@
 
 
 namespace ledpipelines {
-enum BlendingMode {
+enum class BlendingMode {
     NORMAL,
     OVERWRITE,
     ADD,

@@ -10,7 +10,7 @@ class FadeOutEffect : public BaseLedPipelineStage, TimedEffect {
 public:
     SmoothingFunction smoothingFunction;
 
-    FadeOutEffect(float fadeTime, SmoothingFunction function = SmoothingFunction::LINEAR);
+    FadeOutEffect(float fadeTime, const SmoothingFunction& function = SmoothingFunction::LINEAR);
 
     void calculate(int startIndex, TemporaryLedData &tempData) override;
 

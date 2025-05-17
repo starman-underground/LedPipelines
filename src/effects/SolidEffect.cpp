@@ -4,10 +4,10 @@ using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
 SolidEffect::SolidEffect(CRGB color, uint8_t opacity) :
-        BaseLedPipelineStage(NORMAL),
+        BaseLedPipelineStage(BlendingMode::NORMAL),
         color(color),
         opacity(opacity) {
-    this->state = RUNNING;
+    this->state = LedPipelineRunningState::RUNNING;
 }
 
 void SolidEffect::calculate(int startIndex, TemporaryLedData &tempData) {

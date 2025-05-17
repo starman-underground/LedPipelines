@@ -18,6 +18,12 @@ CRGB &operator*=(CRGB &first, const CRGB &second) {
     return first;
 }
 
+uint64_t ledpipelines::minMicrosBetweenUpdates = 0;
+
+void ledpipelines::setMaxRefreshRate(float refreshesPerSecond) {
+    ledpipelines::minMicrosBetweenUpdates = (long) (1000000 / refreshesPerSecond);
+}
+
 static char HexLookUp[] = "0123456789abcdef";
 
 static String byteToHex(uint8_t num) {
@@ -26,7 +32,7 @@ static String byteToHex(uint8_t num) {
     return String(HexLookUp[firstDigit]) + HexLookUp[secondDigit];
 }
 
-String colorToHex(CRGB color, uint8_t opacity) {
+String ledpipelines::colorToHex(CRGB color, uint8_t opacity) {
     return String(byteToHex(color.r) + byteToHex(color.g) + byteToHex(color.b) + byteToHex(opacity));
 }
 

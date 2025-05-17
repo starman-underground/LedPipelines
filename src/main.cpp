@@ -15,22 +15,62 @@ using namespace ledpipelines::effects;
 #define HEADER_LED_STRIP_LENGTH 14
 #define EXHAUST_LED_STRIP_LENGTH 24
 
+#define BASE_COLOR  CRGB::DarkRed
+#define PULSE_COLOR 0xFF2000
+#define STRIP_TIME_OFFSET 4
+
 BaseLedPipelineStage *pipeline;
 
-CRGB leds[1000];
+CRGB leds[HEADER_LED_STRIP_LENGTH * 4 + EXHAUST_LED_STRIP_LENGTH];
 
-unsigned long lastFpsPrintTime = millis();
+/**
+ * Creates a new effect that limits the specific effect to a specified strip. If the strip number is 0-3, the strip
+ * will be shown on a specific header. Otherwise (strip = 4), the strip will be shown on the exhaust.
+ * @param stage the effect that will be limited to the specific strip
+ * @param strip the strip number to limit the effect to. 0-3 = headers, 4 = exhaust.
+ * @return an OffsetEffect that can be used in other effects.
+ */
+BaseLedPipelineStage *limitEffectToStrip(BaseLedPipelineStage *stage, int strip) {
+    auto length = (strip <= 3) ? HEADER_LED_STRIP_LENGTH : EXHAUST_LED_STRIP_LENGTH;
 
-BaseLedPipelineStage *pulseEffect(CRGB color, float fadeInTime, float pauseTime, float fadeOutTime) {
-    return new MaskEffect(
-            new TimeBoxedEffect(new SolidEffect(color), (fadeInTime + pauseTime + fadeOutTime)),
-            (new SeriesLedPipeline())
-                    ->addStage(new FadeInEffect(fadeInTime))
-                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::White), pauseTime))
-                    ->addStage(new FadeOutEffect(fadeOutTime))
-                    ->addStage(new SolidEffect(CRGB::White, 0)),
+    float firing_order[] = {0, 2, 3, 1, 0};
+
+    return (new SeriesLedPipeline())
+            ->addStage(new WaitEffect(STRIP_TIME_OFFSET * firing_order[strip]))
+            ->addStage(
+                    new OffsetEffect(
+                            new MaskEffect(
+                                    stage,
+                                    new SolidSegmentEffect(CRGB::White, length),
+                                    false
+                            ),
+                            HEADER_LED_STRIP_LENGTH * strip
+                    )
+            );
+}
+
+
+BaseLedPipelineStage *pulseEffect(
+        float minWaitTime,
+        float maxWaitTime,
+        float minFadeInTime,
+        float maxFadeInTime,
+        float minFullEffectTime,
+        float maxFullEffectTime,
+        float minFadeOutTime,
+        float maxFadeOutTime
+) {
+
+    return new LoopEffect(new MaskEffect(
+            new SolidEffect(PULSE_COLOR),
+            (new SeriesLedPipeline)
+                    ->addStage(new RandomWaitEffect(minWaitTime, maxWaitTime))
+                    ->addStage(new RandomFadeInEffect(minFadeInTime, maxFadeInTime))
+                    ->addStage(new RandomTimeBoxedEffect(new SolidEffect(CRGB::White), minFullEffectTime,
+                                                         maxFullEffectTime, SamplingFunction::UNIFORM))
+                    ->addStage(new RandomFadeOutEffect(minFadeOutTime, maxFadeOutTime)),
             true
-    );
+    ));
 }
 
 void setup() {
@@ -45,33 +85,29 @@ void setup() {
     FastLED.addLeds<WS2812B, HEADER_4_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 3, HEADER_LED_STRIP_LENGTH);
     FastLED.addLeds<WS2812B, HEADER_5_PIN, GRB>(leds, HEADER_LED_STRIP_LENGTH * 4, EXHAUST_LED_STRIP_LENGTH);
 
-    LPLogger::initialize(LogLevel::Debug);
-
-//    FastLED.setMaxRefreshRate(60);
-//    FastLED.setBrightness(50);
+    LPLogger::initialize(LogLevel::LOG);
+    FastLED.setMaxRefreshRate(60);
+    FastLED.setBrightness(50);
     ledpipelines::initialize();
+    ledpipelines::setMaxRefreshRate(60);
 
     Serial.print("There are this many leds: ");
     Serial.println(TemporaryLedData::size);
-    const CRGB color = 0xFF2000;
+
 
     pipeline = new LoopEffect(
-            (new SeriesLedPipeline)
-                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Red), 2))
-                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Green), 2))
-                    ->addStage(new TimeBoxedEffect(new SolidEffect(CRGB::Blue), 2))
+            (new ParallelLedPipeline(BlendingMode::ADD))
+                    ->addStage(new SolidEffect(BASE_COLOR))
+                    ->addStage(limitEffectToStrip(pulseEffect(0, 3, 2, 6, 3, 5, 10, 15), 0))
+                    ->addStage(limitEffectToStrip(pulseEffect(0, 3, 2, 6, 3, 5, 10, 15), 1))
+                    ->addStage(limitEffectToStrip(pulseEffect(0, 3, 2, 6, 3, 5, 10, 15), 2))
+                    ->addStage(limitEffectToStrip(pulseEffect(0, 3, 2, 6, 3, 5, 10, 15), 3))
+                    ->addStage(limitEffectToStrip(pulseEffect(0, 3, 2, 6, 3, 5, 10, 15), 4))
     );
     Serial.println("done initializing pipeline");
     pipeline->reset();
 }
 
 void loop() {
-    unsigned long startTime = millis();
     pipeline->run();
-    unsigned long endTime = millis();
-    unsigned long frameRate = 1000.0f / (endTime - startTime);
-    if ((endTime - lastFpsPrintTime) >= 1000) {
-        lastFpsPrintTime = endTime;
-        LPLogger::log(String("framerate: ") + frameRate);
-    }
 }
