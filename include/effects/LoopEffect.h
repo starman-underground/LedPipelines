@@ -13,7 +13,7 @@ private:
 public:
     explicit LoopEffect(BaseLedPipelineStage *stage, size_t numLoops = 0);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 };

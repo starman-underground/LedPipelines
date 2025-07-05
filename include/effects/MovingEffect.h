@@ -19,7 +19,7 @@ public:
     MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int startPosition = 0,
                  int endPosition = TemporaryLedData::size);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 };

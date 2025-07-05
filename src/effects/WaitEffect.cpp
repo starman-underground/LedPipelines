@@ -8,7 +8,7 @@ using namespace ledpipelines::effects;
 
 WaitEffect::WaitEffect(float waitTimeSeconds) : TimedEffect(waitTimeSeconds) {}
 
-void WaitEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void WaitEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -45,7 +45,7 @@ RandomWaitEffect::RandomWaitEffect(float minWaitTime, float maxWaitTime, const S
           RandomTimedEffect(minWaitTime, maxWaitTime, function) {}
 
 
-void RandomWaitEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void RandomWaitEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) {
         return;
     }

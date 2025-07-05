@@ -12,7 +12,7 @@ public:
 
     OpacityScalingEffect(BaseLedPipelineStage *stage, uint8_t maxOpacity);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
 };
 

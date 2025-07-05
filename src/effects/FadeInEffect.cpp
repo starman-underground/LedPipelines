@@ -11,7 +11,7 @@ FadeInEffect::FadeInEffect(
         smoothingFunction(smoothingFunction) {}
 
 
-void FadeInEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void FadeInEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -65,7 +65,7 @@ RandomFadeInEffect::RandomFadeInEffect(
     smoothingFunction(smoothingFunction) {}
 
 
-void RandomFadeInEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
+void RandomFadeInEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {

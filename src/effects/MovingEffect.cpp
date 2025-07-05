@@ -12,7 +12,7 @@ MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int
           ledsPerSecond(ledsPerSecond),
           elapsedPercentage(0) {}
 
-void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -33,11 +33,10 @@ void MovingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
             return;
         }
     }
-
+    
     // calculate the offset due to the motion.
-    int deltaLeds = (int) currentPosition;
     this->elapsedPercentage = this->currentPosition / this->endPosition;
-    this->stage->calculate(startIndex + deltaLeds, tempData);
+    this->stage->calculate(startIndex + currentPosition, tempData);
     if (this->stage->state == LedPipelineRunningState::DONE) {
         this->state = LedPipelineRunningState::DONE;
     }

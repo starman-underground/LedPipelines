@@ -10,7 +10,7 @@ public:
 
     void reset() override;
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 };
 
 class RandomTimeBoxedEffect : public WrapperEffect, public RandomTimedEffect {
@@ -32,7 +32,7 @@ public:
 
     void reset() override;
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 };
 
 

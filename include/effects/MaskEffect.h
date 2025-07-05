@@ -17,7 +17,7 @@ public:
             BaseLedPipelineStage *mask,
             bool useMaskRuntime = false);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 };

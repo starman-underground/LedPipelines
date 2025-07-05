@@ -13,7 +13,7 @@ MaskEffect::MaskEffect(
 }
 
 
-void MaskEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void MaskEffect::calculate(float startIndex, TemporaryLedData &tempData) {
 
     if (this->state == LedPipelineRunningState::DONE) {
         return;

@@ -6,7 +6,7 @@ using namespace ledpipelines::effects;
 OpacityScalingEffect::OpacityScalingEffect(BaseLedPipelineStage *stage, uint8_t maxOpacity)
         : WrapperEffect(stage), maxOpacity(maxOpacity) {}
 
-void OpacityScalingEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void OpacityScalingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE)
         return;
 

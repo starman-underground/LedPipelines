@@ -64,7 +64,7 @@ void LedPipeline::reset() {
 
 ParallelLedPipeline::ParallelLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
 
-void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
+void ParallelLedPipeline::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE)
         return;
 
@@ -96,7 +96,7 @@ void ParallelLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) 
 
 SeriesLedPipeline::SeriesLedPipeline(BlendingMode mode) : LedPipeline(mode) {}
 
-void SeriesLedPipeline::calculate(int startIndex, TemporaryLedData &tempData) {
+void SeriesLedPipeline::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE)
         return;
 

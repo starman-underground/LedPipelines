@@ -9,7 +9,7 @@ RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int 
           repeatDistance(repeatDistance) {}
 
 
-void RepeatEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void RepeatEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE)
         return;
 

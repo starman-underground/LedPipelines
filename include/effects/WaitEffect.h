@@ -10,7 +10,7 @@ public:
 
     WaitEffect(float waitTimeSeconds);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 
@@ -30,7 +30,7 @@ public:
             const SamplingFunction& function = SamplingFunction::UNIFORM
     );
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 };

@@ -13,7 +13,7 @@ public:
     OpacityGradientEffect(BaseLedPipelineStage *stage, int fadeLength, int startIndex = 0,
                           SmoothingFunction smoothingType = SmoothingFunction::SMOOTH_LINEAR);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
 };
 

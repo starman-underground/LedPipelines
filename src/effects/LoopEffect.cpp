@@ -13,7 +13,7 @@ void LoopEffect::reset() {
     currentNumLoops = 0;
 }
 
-void LoopEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void LoopEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (state == LedPipelineRunningState::DONE) {
         return;
     }

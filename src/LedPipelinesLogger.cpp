@@ -24,9 +24,6 @@ static String getFormattedTime() {
 }
 
 void LPLogger::logInternal(LogLevel logLevel, String &log) {
-    if (LPLogger::internalLogLevel < logLevel) {
-        return;
-    }
 
     Serial.println("[" + getFormattedTime() + "] (" + logLevel.toString() + ") " + log);
 }

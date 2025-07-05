@@ -12,7 +12,7 @@ public:
 public:
     OffsetEffect(BaseLedPipelineStage *stage, int offset);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 };
 
 }

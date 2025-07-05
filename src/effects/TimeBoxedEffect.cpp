@@ -8,7 +8,7 @@ TimeBoxedEffect::TimeBoxedEffect(BaseLedPipelineStage *stage, float timeToRunSec
         : WrapperEffect(stage), TimedEffect(timeToRunSeconds) {}
 
 
-void TimeBoxedEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void TimeBoxedEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -55,7 +55,7 @@ RandomTimeBoxedEffect::RandomTimeBoxedEffect(
         ledpipelines::SamplingFunction samplingFunction
 ) : WrapperEffect(stage), RandomTimedEffect(minRuntime, maxRuntime, samplingFunction) {}
 
-void RandomTimeBoxedEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
+void RandomTimeBoxedEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {

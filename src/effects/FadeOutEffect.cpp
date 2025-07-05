@@ -13,7 +13,7 @@ FadeOutEffect::FadeOutEffect(
         smoothingFunction(function) {}
 
 
-void FadeOutEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void FadeOutEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -64,7 +64,7 @@ RandomFadeOutEffect::RandomFadeOutEffect(
 ) : RandomTimedEffect(minFadeTime, maxFadeTime, samplingFunction),
     smoothingFunction(smoothingFunction) {}
 
-void RandomFadeOutEffect::calculate(int startIndex, ledpipelines::TemporaryLedData &tempData) {
+void RandomFadeOutEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {

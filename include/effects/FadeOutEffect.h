@@ -12,7 +12,7 @@ public:
 
     FadeOutEffect(float fadeTime, const SmoothingFunction& function = SmoothingFunction::LINEAR);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 
@@ -31,7 +31,7 @@ public:
             SamplingFunction samplingFunction = SamplingFunction::UNIFORM
     );
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 

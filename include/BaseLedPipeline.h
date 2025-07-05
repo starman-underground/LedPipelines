@@ -20,7 +20,7 @@ public:
 
     BaseLedPipelineStage *nextStage = nullptr;
 
-    virtual void calculate(int startIndex, TemporaryLedData &tempData) = 0;
+    virtual void calculate(float startIndex, TemporaryLedData &tempData) = 0;
 
     virtual void run();
 
@@ -71,7 +71,7 @@ class ParallelLedPipeline : public LedPipeline {
 public:
     ParallelLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
 };
 
@@ -86,7 +86,7 @@ public:
 
     SeriesLedPipeline(BlendingMode mode = BlendingMode::NORMAL);
 
-    void calculate(int startIndex, TemporaryLedData &tempData) override;
+    void calculate(float startIndex, TemporaryLedData &tempData) override;
 
     void reset() override;
 

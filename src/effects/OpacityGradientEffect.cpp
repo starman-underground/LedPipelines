@@ -10,12 +10,12 @@ OpacityGradientEffect::OpacityGradientEffect(BaseLedPipelineStage *stage, int fa
 }
 
 
-void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void OpacityGradientEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE)
         return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
-        this->state =  LedPipelineRunningState::RUNNING;
+        this->state = LedPipelineRunningState::RUNNING;
     }
 
 
@@ -24,14 +24,14 @@ void OpacityGradientEffect::calculate(int startIndex, TemporaryLedData &tempData
     for (int i = 0; i < abs(fadeLength); i++) {
         int sign = fadeLength < 0 ? -1 : 1;
         tempData.set(
-                startIndex + i * sign + this->startIndex,
-                tempData.get(startIndex + i * sign + this->startIndex),
+                this->startIndex + i * sign + this->startIndex,
+                tempData.get(this->startIndex + i * sign + this->startIndex),
                 smoothingFunction(
                         i,
                         0,
                         fadeLength,
                         0,
-                        tempData.getOpacity(startIndex + i * sign + this->startIndex)
+                        tempData.getOpacity(this->startIndex + i * sign + this->startIndex)
                 )
         );
     }

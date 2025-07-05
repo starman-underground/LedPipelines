@@ -10,6 +10,6 @@ OffsetEffect::OffsetEffect(BaseLedPipelineStage *stage, int offset)
 }
 
 
-void OffsetEffect::calculate(int startIndex, TemporaryLedData &tempData) {
+void OffsetEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     this->stage->calculate(startIndex + offset, tempData);
 }
