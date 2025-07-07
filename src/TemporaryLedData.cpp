@@ -41,7 +41,8 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
         auto A_rgb = this->data[i];
         auto B_alpha = other.opacity[i];
         auto B_rgb = other.data[i];
-        // if other pixel has no opacity, we skip this pixel.
+        // if other pixel has no opacity, we skip this pixel. We can't skip it in MASK mode, because in MASK mode
+        // opacity of 0 pixels are masked out.
         if (!other.opacity[i] && blendingMode != BlendingMode::MASK)
             continue;
 
@@ -68,8 +69,8 @@ void TemporaryLedData::merge(TemporaryLedData &other, BlendingMode blendingMode)
             case BlendingMode::MASK:
                 // in mask mode, let through everywhere that has 100% opacity
                 // and nothing through where the mask has 0% opacity.
-                // mask colors don't do anything here (yet).
                 this->opacity[i] = (A_alpha * B_alpha) / 255;
+                this->data[i] = (A_rgb * B_rgb);
                 break;
         }
     }
