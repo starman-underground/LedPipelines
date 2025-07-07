@@ -13,6 +13,10 @@ CRGB operator*(CRGB first, CRGB second);
 
 CRGB &operator*=(CRGB &first, const CRGB &second);
 
+CRGB operator*(CRGB first, const float amount);
+
+CRGB &operator*=(CRGB &first, const float amount);
+
 namespace ledpipelines {
 
 

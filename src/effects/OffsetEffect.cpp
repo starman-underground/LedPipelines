@@ -3,7 +3,7 @@
 using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
-OffsetEffect::OffsetEffect(BaseLedPipelineStage *stage, int offset)
+OffsetEffect::OffsetEffect(BaseLedPipelineStage *stage, float offset)
         : WrapperEffect(stage),
           offset(offset) {
     this->blendingMode = stage->blendingMode;

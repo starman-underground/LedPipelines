@@ -10,7 +10,7 @@ class AbsolutePositionEffect : public WrapperEffect {
 public:
     int startPosition;
 
-    explicit AbsolutePositionEffect(BaseLedPipelineStage *stage, int startPosition = 0);
+    explicit AbsolutePositionEffect(BaseLedPipelineStage *stage, float startPosition = 0);
 
     void calculate(float startIndex, TemporaryLedData &tempData) override;
 };

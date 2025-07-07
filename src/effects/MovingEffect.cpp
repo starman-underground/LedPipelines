@@ -4,7 +4,7 @@
 using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
-MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, int startPosition, int endPosition)
+MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, float startPosition, float endPosition)
         : WrapperEffect(stage),
           currentPosition(0),
           startPosition(startPosition),
@@ -33,7 +33,7 @@ void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
             return;
         }
     }
-    
+
     // calculate the offset due to the motion.
     this->elapsedPercentage = this->currentPosition / this->endPosition;
     this->stage->calculate(startIndex + currentPosition, tempData);

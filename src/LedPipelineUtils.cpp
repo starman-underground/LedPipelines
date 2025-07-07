@@ -18,6 +18,21 @@ CRGB &operator*=(CRGB &first, const CRGB &second) {
     return first;
 }
 
+CRGB operator*(const CRGB first, const float amount) {
+    return CRGB(
+            (size_t) first.r * amount,
+            (size_t) first.g * amount,
+            (size_t) first.b * amount
+    );
+}
+
+CRGB &operator*=(CRGB &first, const float amount) {
+    first.r = (size_t) first.r * amount;
+    first.g = (size_t) first.g * amount;
+    first.b = (size_t) first.b * amount;
+    return first;
+}
+
 uint64_t ledpipelines::minMicrosBetweenUpdates = 0;
 
 void ledpipelines::setMaxRefreshRate(float refreshesPerSecond) {

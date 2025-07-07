@@ -38,23 +38,28 @@ void SolidSegmentEffect::calculate(float startIndex, TemporaryLedData &tempData)
      * if the start is on a different pixel than the end, we can light up the first pixel partially, then light up
      * all pixels between start and end completely, and then light up the last pixel partially as well.
      */
-
-
     if (startIndexFloor == endIndexFloor) {
         // both are on the same pixel, we can light it up partially.
-        uint8_t amountToLightUp = segmentLength * 255;
-        tempData.set(startIndexFloor, color, amountToLightUp);
+        float amountToLightUp = segmentLength;
+        tempData.set(startIndexFloor, color * amountToLightUp, opacity);
 
     } else {
 
-        uint8_t amountToLightUpFirstPixel = (1 - (startIndex - startIndexFloor)) * 255;
-        uint8_t amountToLightUpLastPixel = (endIndex - endIndexFloor) * 255;
+        tempData.printData();
 
-        tempData.set(startIndexFloor, color, amountToLightUpFirstPixel);
-        for (int i = startIndexFloor + 1; i < endIndexFloor ; i++) {
-            tempData.set(i, color);
+
+        LPLogger::log(String("start: ") + startIndex + " end: " + endIndex + " start floor: " + startIndexFloor + " end floor: " + endIndexFloor);
+
+        float amountToLightUpFirstPixel = (1 - (startIndex - startIndexFloor));
+        float amountToLightUpLastPixel = (endIndex - endIndexFloor);
+
+        tempData.set(startIndexFloor, CRGB(color * amountToLightUpFirstPixel), opacity);
+        for (int i = startIndexFloor + 1; i < endIndexFloor; i++) {
+            tempData.set(i, color, opacity);
         }
-        tempData.set(endIndexFloor, color, amountToLightUpLastPixel);
+        tempData.set(endIndexFloor, CRGB(color * amountToLightUpLastPixel), opacity);
+
+        tempData.printData();
 
     }
 }
