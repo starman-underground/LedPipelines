@@ -2,7 +2,7 @@
 
 LedPipelines is a library that sits on top of FastLED and provides a way to create animations that can layer easily and fluidly, with an easy-to-use declarative syntax.
 
-LedPipelines is a library meant to sit on top of FastLED and provide a way to create animation pipelines that can layer easily and fluidly. It will support animations, layers, multiple segments, and more features.
+LedPipelines is a library meant to sit on top of FastLED and provide a way to create animation pipelines that can layer easily and fluidly. It will support animations, layers, multiple segments, fractional LED lighting, and more features.
 
 - [current worked on tickets](https://github.com/users/TheVizWiz/projects/3/views/1)
 - [feature requests](https://github.com/TheVizWiz/LedPipelines/issues)
