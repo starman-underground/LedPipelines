@@ -5,31 +5,31 @@ using namespace ledpipelines;
 
 CRGB operator*(const CRGB first, const CRGB second) {
     return CRGB(
-            ((size_t) first.r * (size_t) second.r) / 255,
-            ((size_t) first.g * (size_t) second.g) / 255,
-            ((size_t) first.b * (size_t) second.b) / 255
+            (first.r * second.r) / 255,
+            (first.g * second.g) / 255,
+            (first.b * second.b) / 255
     );
 }
 
 CRGB &operator*=(CRGB &first, const CRGB &second) {
-    first.r = ((size_t) first.r * (size_t) second.r) / 255;
-    first.g = ((size_t) first.g * (size_t) second.g) / 255;
-    first.b = ((size_t) first.b * (size_t) second.b) / 255;
+    first.r = (first.r * second.r) / 255;
+    first.g = (first.g * second.g) / 255;
+    first.b = (first.b * second.b) / 255;
     return first;
 }
 
 CRGB operator*(const CRGB first, const float amount) {
     return CRGB(
-            (size_t) first.r * amount,
-            (size_t) first.g * amount,
-            (size_t) first.b * amount
+            first.r * amount,
+            first.g * amount,
+            first.b * amount
     );
 }
 
 CRGB &operator*=(CRGB &first, const float amount) {
-    first.r = (size_t) first.r * amount;
-    first.g = (size_t) first.g * amount;
-    first.b = (size_t) first.b * amount;
+    first.r = first.r * amount;
+    first.g = first.g * amount;
+    first.b = first.b * amount;
     return first;
 }
 

@@ -30,7 +30,7 @@ void SolidSegmentEffect::calculate(float startIndex, TemporaryLedData &tempData)
     int endIndexFloor = (int) endIndex;
 
     /**
-     * Two cases: if we are trying to create a segment that is less than one pixel.
+     * Two cases:
      *
      * if the start and end of the segment are in the same pixel, then we need to only light up that pixel, and only
      * partially based on how large the pixel value is.
@@ -45,21 +45,26 @@ void SolidSegmentEffect::calculate(float startIndex, TemporaryLedData &tempData)
 
     } else {
 
-        tempData.printData();
-
-
-        LPLogger::log(String("start: ") + startIndex + " end: " + endIndex + " start floor: " + startIndexFloor + " end floor: " + endIndexFloor);
 
         float amountToLightUpFirstPixel = (1 - (startIndex - startIndexFloor));
         float amountToLightUpLastPixel = (endIndex - endIndexFloor);
 
-        tempData.set(startIndexFloor, CRGB(color * amountToLightUpFirstPixel), opacity);
+        if (amountToLightUpFirstPixel != 0) {
+            tempData.set(startIndexFloor, color, opacity * amountToLightUpFirstPixel);
+        }
+
         for (int i = startIndexFloor + 1; i < endIndexFloor; i++) {
             tempData.set(i, color, opacity);
         }
-        tempData.set(endIndexFloor, CRGB(color * amountToLightUpLastPixel), opacity);
 
-        tempData.printData();
+        if (amountToLightUpLastPixel != 0) {
+            tempData.set(endIndexFloor, color, opacity * amountToLightUpLastPixel);
+        }
+
+
+//        LPLogger::log(String("lit up first pixel ") + amountToLightUpFirstPixel + " and last pixel " +
+//                      amountToLightUpLastPixel);
+
 
     }
 }

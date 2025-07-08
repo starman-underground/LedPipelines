@@ -16,7 +16,7 @@ void setup() {
 
     Serial.println("starting LEDs");
 
-    FastLED.addLeds<WS2812B, 14, RGB>(leds, 30);
+    FastLED.addLeds<WS2812B, 14, RGB>(leds, 100);
 
     LPLogger::initialize(LogLevel::LOG);
     FastLED.setMaxRefreshRate(60);
@@ -27,15 +27,26 @@ void setup() {
     Serial.print("There are this many leds: ");
     Serial.println(TemporaryLedData::size);
 
-    pipeline = new LoopEffect(
-            new MovingEffect(
-                    new SolidSegmentEffect(
-                            CRGB::Red,
-                            2.5
-                    ),
-                    5, 0, 10
-            )
-    );
+
+    pipeline = (new ParallelLedPipeline())
+            ->addStage(new SolidEffect(CRGB::White))
+            ->addStage(
+                    new LoopEffect(
+                            new MovingEffect(
+                                    new OpacityGradientEffect(
+                                            new OpacityGradientEffect(
+                                                    new SolidSegmentEffect(
+
+                                                            CRGB::Red,
+                                                            10
+                                                    ),
+                                                    2
+                                            ), -2, 10
+                                    ),
+                                    5, 0, 90
+                            )
+                    )
+            );
 
     Serial.println("done initializing pipeline");
     pipeline->reset();

@@ -3,7 +3,7 @@
 using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
-RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, int repeatDistance, int numRepeats)
+RepeatEffect::RepeatEffect(BaseLedPipelineStage *stage, float repeatDistance, int numRepeats)
         : WrapperEffect(stage),
           numRepeats(numRepeats),
           repeatDistance(repeatDistance) {}
@@ -30,7 +30,7 @@ void RepeatEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     // shift it by x amount.
     if (numRepeats == 0) {
         // if num repeats isn't specified, then we use infinite repeats. Do this both forwards and backwards.
-        int currentIndex = startIndex;
+        float currentIndex = startIndex;
         bool currentStageSetsData = true;
         while (currentStageSetsData) {
             TemporaryLedData stageData = TemporaryLedData();

@@ -32,7 +32,6 @@ void BaseLedPipelineStage::run() {
     TemporaryLedData data = TemporaryLedData();
     this->calculate(0, data);
     data.populateFastLed();
-    data.printData();
     FastLED.show();
 }
 
