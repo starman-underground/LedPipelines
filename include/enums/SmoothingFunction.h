@@ -10,6 +10,8 @@ public:
         SMOOTH_LINEAR,
         LINEAR,
         SINE,
+        QUADRATIC,
+        INVERSE_QUADRATIC
     };
 
     SmoothingFunction(const SmoothingFunction_ &function) : value(function) {}

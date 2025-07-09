@@ -2,22 +2,24 @@
 
 
 #include "BaseEffect.h"
+#include "LedPipelineUtils.h"
 
 
 namespace ledpipelines::effects {
 class MovingEffect : public WrapperEffect {
 
 private:
-    float ledsPerSecond;
+    float runtimeSeconds;
     float currentPosition;
     float startPosition;
     float endPosition;
     float elapsedPercentage;
     unsigned long startTimeMillis;
+    SmoothingFunction smoothingFunction;
 
 public:
-    MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, float startPosition = 0,
-                 float endPosition = TemporaryLedData::size);
+    MovingEffect(BaseLedPipelineStage *stage, float runtimeSeconds, float startPosition = 0,
+                 float endPosition = TemporaryLedData::size, SmoothingFunction smoothingFunction = SmoothingFunction::LINEAR);
 
     void calculate(float startIndex, TemporaryLedData &tempData) override;
 

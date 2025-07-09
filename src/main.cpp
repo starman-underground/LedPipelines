@@ -19,10 +19,10 @@ void setup() {
     FastLED.addLeds<WS2812B, 14, RGB>(leds, 100);
 
     LPLogger::initialize(LogLevel::LOG);
-    FastLED.setMaxRefreshRate(60);
 
     ledpipelines::initialize();
     ledpipelines::setMaxRefreshRate(60);
+    FastLED.setBrightness(50);
 
     Serial.print("There are this many leds: ");
     Serial.println(TemporaryLedData::size);
@@ -32,19 +32,25 @@ void setup() {
             ->addStage(new SolidEffect(CRGB::White))
             ->addStage(
                     new LoopEffect(
-                            new MovingEffect(
-                                    new OpacityGradientEffect(
-                                            new OpacityGradientEffect(
+                            (new SeriesLedPipeline())
+                                    ->addStage(
+                                            new MovingEffect(
                                                     new SolidSegmentEffect(
-
                                                             CRGB::Red,
-                                                            10
+                                                            2
                                                     ),
-                                                    2
-                                            ), -2, 10
-                                    ),
-                                    5, 0, 90
-                            )
+                                                    1, 0, 20, SmoothingFunction::INVERSE_QUADRATIC
+                                            )
+                                    )
+                                    ->addStage(
+                                            new MovingEffect(
+                                                    new SolidSegmentEffect(
+                                                            CRGB::Red,
+                                                            2
+                                                    ),
+                                                    1, 20, 0, SmoothingFunction::QUADRATIC
+                                            )
+                                    )
                     )
             );
 

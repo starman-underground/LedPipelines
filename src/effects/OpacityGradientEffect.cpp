@@ -175,14 +175,6 @@ void OpacityGradientEffect::calculateBackwardGradient(float startIndex, Temporar
         float lastPixelRightBound = 0;
         float lastPixelFadeAmount = (lastPixelLeftBound + lastPixelRightBound) / 2;
 
-
-        LPLogger::log(String("first pixel: ") + startIndex + " " + startIndexFloor + " " + firstPixelLeftBound + " " + firstPixelRightBound + " " + firstPixelFadeAmount);
-        LPLogger::log(floor(startIndex + 1));
-        LPLogger::log(String("last pixel: ") + endIndex + " " + endIndexFloor + " " + lastPixelLeftBound + " " + lastPixelRightBound + " " + lastPixelFadeAmount);
-        LPLogger::log(floor(startIndex + fadeLength));
-
-
-
         // set first pixel
         tempData.set(
                 startIndexFloor,

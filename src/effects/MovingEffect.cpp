@@ -1,16 +1,25 @@
 
+#include <utility>
+
 #include "effects/MovingEffect.h"
 
 using namespace ledpipelines;
 using namespace ledpipelines::effects;
 
-MovingEffect::MovingEffect(BaseLedPipelineStage *stage, float ledsPerSecond, float startPosition, float endPosition)
+MovingEffect::MovingEffect(
+        BaseLedPipelineStage *stage,
+        float runtimeSeconds,
+        float startPosition,
+        float endPosition,
+        SmoothingFunction smoothingFunction
+        )
         : WrapperEffect(stage),
           currentPosition(0),
           startPosition(startPosition),
           endPosition(endPosition),
-          ledsPerSecond(ledsPerSecond),
-          elapsedPercentage(0) {}
+          runtimeSeconds(runtimeSeconds),
+          elapsedPercentage(0),
+          smoothingFunction(smoothingFunction) {}
 
 void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
@@ -20,24 +29,16 @@ void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
         this->state =  LedPipelineRunningState::RUNNING;
     }
 
-    this->currentPosition = (ledsPerSecond * (millis() - this->startTimeMillis) / 1000.0f);
+    this->elapsedPercentage = (millis() - this->startTimeMillis) / runtimeSeconds / 1000.0f;
 
-    if (ledsPerSecond < 0) {
-        if (this->currentPosition <= this->endPosition) {
-            this->state = this->stage->state;
-            return;
-        }
-    } else {
-        if (this->currentPosition >= this->endPosition) {
-            this->state = this->stage->state;
-            return;
-        }
-    }
 
-    // calculate the offset due to the motion.
-    this->elapsedPercentage = this->currentPosition / this->endPosition;
+    this->currentPosition = smoothingFunction(elapsedPercentage, startPosition, endPosition);
+
+    LPLogger::log(String("elapsed percentage: ") + elapsedPercentage + " current position: " + currentPosition);
+
     this->stage->calculate(startIndex + currentPosition, tempData);
-    if (this->stage->state == LedPipelineRunningState::DONE) {
+
+    if (this->stage->state == LedPipelineRunningState::DONE || this->elapsedPercentage >= 1) {
         this->state = LedPipelineRunningState::DONE;
     }
 }

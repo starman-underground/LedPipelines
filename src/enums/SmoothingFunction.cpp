@@ -41,6 +41,14 @@ float SmoothingFunction::operator()(float amount, float oldMin, float oldMax, fl
             // f(x) = sin(pi * x / 2)
             percentage = sinf(M_PI * percentage / 2);
             break;
+        case QUADRATIC:
+            // f(x) = x^2
+            percentage = pow(percentage, 2);
+            break;
+        case INVERSE_QUADRATIC:
+            // f(x) = 1 - (x - 1)^2
+            percentage = 1 - pow(percentage - 1, 2);
+            break;
     }
 
     return (newMin + (newMax - newMin) * percentage);
