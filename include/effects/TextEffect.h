@@ -9,8 +9,6 @@ namespace ledpipelines::effects {
 class TextEffect : public BaseLedPipelineStage{
 
 protected:
-    float charWidth;
-    float charHeight;
     TwoDimensionalLayout layout;
     std::string text;
     CRGB bg_color;

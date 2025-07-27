@@ -4,8 +4,6 @@ using namespace ledpipelines::effects;
 
 TextEffect::TextEffect(const std::string &text, TwoDimensionalLayout layout, CRGB color, CRGB bg_color, uint8_t opacity)
     : BaseLedPipelineStage(BlendingMode::NORMAL),
-    charWidth(FONT_WIDTH),
-    charHeight(FONT_HEIGHT),
     text(text),
     layout(layout),
     bg_color(bg_color),
@@ -14,17 +12,20 @@ TextEffect::TextEffect(const std::string &text, TwoDimensionalLayout layout, CRG
 
 void TextEffect::calculate(float startX, TemporaryLedData &tempData) {
     // #TODO: This is a hack, we should allow the user to specify the display dimensions and text position/alignment.
-    int displayHeight = 8;
-    int displayWidth = 32;
+    int bottomLine = 8;
+    int currentAdvance = 0;
+    int displayWidth = 32; // Assuming a fixed width for the display
+    int displayHeight = 8; // Assuming a fixed height for the display
     for (size_t c = 0; c < text.size(); ++c) {
         char currentChar = text[c];
-        for (int i = 0; i < charHeight; ++i) {
-            for (int j = 0; j < charWidth + 1; ++j) {
-                int x  = static_cast<int>(startX) + c*(static_cast<int>(charWidth)+1) + j;
-                int y = displayHeight - charHeight + i;
+        auto gm = getGlyphMetrics(currentChar);
+        for (int i = 0; i < gm.height; ++i) {
+            for (int j = 0; j < gm.width + 1; ++j) {
+                int x  = static_cast<int>(startX) + currentAdvance + j;
+                int y = bottomLine + gm.yOffset + i;
                 int index = ledpipelines::calculateLedIndex(layout, x, y, displayWidth, displayHeight);
                 if (index < TemporaryLedData::size && index >= 0 && x >= 0 && y >= 0 && x < displayWidth && y < displayHeight) {                    
-                    if (ledpipelines::getPixel(currentChar, j, i)) {
+                    if (getGlyphPixel(currentChar, j, i)) {
                         tempData.set(index, color, opacity);
                     } else {
                         tempData.set(index, bg_color, 16); // Set to background color with reduced opacity
@@ -32,6 +33,7 @@ void TextEffect::calculate(float startX, TemporaryLedData &tempData) {
                 }
             }
         }
+        currentAdvance += gm.advanceWidth;
     }
 
     // // Iterate through each pixel in the character's area
