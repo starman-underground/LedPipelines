@@ -5,8 +5,11 @@
 #include "enums/BlendingMode.h"
 #include "enums/SmoothingFunction.h"
 #include "enums/SamplingFunction.h"
+#include "enums/TwoDimensionalLayout.h"
 #include "TemporaryLedData.h"
 #include "LedPipelinesLogger.h"
+#include "resources/FontAtlas.h"
+#include "resources/FireSprites.h"
 
 
 CRGB operator*(CRGB first, CRGB second);
@@ -40,5 +43,25 @@ void setMaxRefreshRate(float refreshesPerSecond);
  */
 String colorToHex(CRGB color, uint8_t opacity);
 
+/**
+ * Test if there is a pixel at (x, y) in the given character from the FontAtlas PROGMEM.
+ * @param c the character to get the pixel from.
+ * @param x the x coordinate of the pixel, 0-indexed.
+ * @param y the y coordinate of the pixel, 0-indexed.
+ * @return true if the pixel is on, false if it is off.
+ */
+bool getPixel(char c, int x, int y);
+
+/**
+ * Calculate the index of a pixel in a 2D layout, given the layout type and coordinates.
+ * @param layout the layout determines the ordering of LEDs in the 2D matrix.
+ * @param x the x coordinate of the pixel.
+ * @param y the y coordinate of the pixel.
+ * @param w the width of the layout.
+ * @param h the height of the layout.
+ * @return the calculated LED index of the pixel.
+ */
+int calculateLedIndex(TwoDimensionalLayout layout, int x, int y, int w, int h);
 
 }
+

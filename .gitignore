@@ -4,5 +4,6 @@
 # for development
 .idea
 .vscode
-# for font compression script
+# for font compression
+*.ttf
 *.exe

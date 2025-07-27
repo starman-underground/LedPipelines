@@ -51,7 +51,52 @@ String ledpipelines::colorToHex(CRGB color, uint8_t opacity) {
     return String(byteToHex(color.r) + byteToHex(color.g) + byteToHex(color.b) + byteToHex(opacity));
 }
 
+bool ledpipelines::getPixel(char c, int x, int y) {
+    if (c < FIRST_ASCII || c > LAST_ASCII) return false;
+    if (x < 0 || x >= FONT_WIDTH || y < 0 || y >= FONT_HEIGHT) return false;
 
+    int charIndex = c - FIRST_ASCII;
+    int pixelindex = y*FONT_WIDTH + x;
+    int bitIndex = charIndex*BITS_PER_CHARACTER + pixelindex;
+    int byteIndex = bitIndex >> 3;
+    int bitOffset = 7 - (bitIndex & 7);
 
+    uint8_t byte = pgm_read_byte(&COMPRESSED_FONT_DATA[byteIndex]);
+    return (byte >> bitOffset) & 1;
+}
 
+String printCharacter(char c) {
+    String result;
+    if (c < FIRST_ASCII || c > LAST_ASCII) {
+        result = "Invalid character";
+    } else {
+        for (int y = 0; y < FONT_HEIGHT; ++y) {
+            for (int x = 0; x < FONT_WIDTH; ++x) {
+                result += getPixel(c, x, y) ? '#' : '.';
+            }
+            result += '\n';
+        }
+    }
+    return result;
+}
 
+int ledpipelines::calculateLedIndex(TwoDimensionalLayout layout, int x, int y, int w, int h) {
+    switch (layout) {
+        case TwoDimensionalLayout::VERTICAL_SNAKE: // left to right, top to bottom then bottom to top
+            return (x % 2 == 0) ? ((x - 1)*h + y) : ((x - 1)*h + (h - 1 - y));
+        case TwoDimensionalLayout::VERTICAL_SNAKE_XFLIP: // right to left, top to bottom then bottom to top
+            return (x % 2 == 0) ? ((w - 1 - x)*h + (h - 1 - y)) : ((w - 1 - x)*h + y);
+        case TwoDimensionalLayout::VERTICAL_SNAKE_YFLIP: // left to right, bottom to top then top to bottom
+            return (x % 2 == 0) ? ((x - 1)*h + (h - 1 - y)) : ((x - 1)*h + y);
+        case TwoDimensionalLayout::VERTICAL_SNAKE_XYFLIP: // right to left, bottom to top then top to bottom
+            return (x % 2 == 0) ? ((w - 1 - x)*h + y) : ((w - 1 - x)*h + (h - 1 - y));
+        case TwoDimensionalLayout::HORIZONTAL_SNAKE: // top to bottom, left to right then right to left
+            return (y % 2 == 0) ? (x + y*w) : ((w - 1 - x) + y*w);
+        case TwoDimensionalLayout::HORIZONTAL_SNAKE_XFLIP: // top to bottom, right to left then left to right
+            return (y % 2 == 0) ? ((w - 1 - x) + y*w) : (x + y*w);
+        case TwoDimensionalLayout::HORIZONTAL_SNAKE_YFLIP: // bottom to top, left to right then right to left
+            return (y % 2 == 0) ? (x + (h - 1 - y)*w) : ((w - 1 - x) + (h - 1 - y)*w);
+        case TwoDimensionalLayout::HORIZONTAL_SNAKE_XYFLIP: // bottom to top, right to left then left to right
+            return (y % 2 == 0) ? ((w - 1 - x) + (h - 1 - y)*w) : (x + (h - 1 - y)*w);
+    }
+}

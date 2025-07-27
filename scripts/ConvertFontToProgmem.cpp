@@ -7,10 +7,13 @@
 #include "stb_truetype.h"
 
 // Font configuration
-constexpr int FONT_W = 3;
-constexpr int FONT_H = 5;
+// Size
+constexpr int FONT_W = 5;
+constexpr int FONT_H = 8;
+// Range of available ASCII characters
 constexpr int FIRST_CHAR = 32;
 constexpr int LAST_CHAR = 126;
+
 constexpr int NUM_CHARS = LAST_CHAR - FIRST_CHAR + 1;
 constexpr int BITS_PER_CHAR = FONT_W * FONT_H;
 constexpr int TOTAL_BITS = NUM_CHARS * BITS_PER_CHAR;
@@ -22,7 +25,7 @@ private:
     int bitPosition;
 
 public:
-    BitPacker() : data((TOTAL_BITS + 7) / 8, 0), bitPosition(0) {}
+    BitPacker() : data(TOTAL_BYTES, 0), bitPosition(0) {}
     
     void addBit(bool bit) {
         if (bit) {
@@ -42,14 +45,14 @@ bool extractPixel(unsigned char* bitmap, int width, int height, int x, int y) {
     return bitmap[y * width + x] > 128;  // Threshold for "on" pixel
 }
 
-void generateCompressedHeader(const std::vector<uint8_t>& packedData, const std::string& filename) {
-    std::ofstream header(filename);
+void generateCompressedHeader(const std::vector<uint8_t>& packedData) {
+    std::ofstream header("../include/FontAtlas.h");
     
     header << "#pragma once\n";
     header << "#include <Arduino.h>\n\n";
     
     // Font constants
-    header << "// Compressed 3x5 Font Atlas Configuration\n";
+    header << "// Compressed " << FONT_W << "x" << FONT_H << " Font Atlas Configuration\n";
     header << "constexpr int FONT_WIDTH = " << FONT_W << ";\n";
     header << "constexpr int FONT_HEIGHT = " << FONT_H << ";\n";
     header << "constexpr int FIRST_ASCII = " << FIRST_CHAR << ";\n";
@@ -70,9 +73,9 @@ void generateCompressedHeader(const std::vector<uint8_t>& packedData, const std:
 }
 
 int main(int argc, char** argv) {
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <font.ttf> <output.h>\n";
-        std::cerr << "Generates compressed bitmap font atlas for 3x5 pixel characters\n";
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <font.ttf>\n";
+        std::cerr << "Generates compressed bitmap font atlas from .ttf file at include/FontAtlas.h.\n";
         return 1;
     }
 
@@ -127,16 +130,13 @@ int main(int argc, char** argv) {
     }
 
     // Generate header file
-    generateCompressedHeader(packer.getData(), argv[2]);
+    generateCompressedHeader(packer.getData());
     
-    std::cout << "\nCompression Results:\n";
-    std::cout << "Total bits used: " << packer.getBitCount() << "/" << TOTAL_BITS << "\n";
-    std::cout << "Compressed size: " << packer.getData().size() << " bytes\n";
-    std::cout << "Standard format would be: " << (NUM_CHARS * 5) << " bytes\n";
-    std::cout << "Space savings: " << std::fixed << std::setprecision(1) 
+    std::cout << "Compressed Size: " << packer.getData().size() << " bytes\n";
+    std::cout << "Standard Size would be: " << (NUM_CHARS * 5) << " bytes\n";
+    std::cout << "Space Savings: " << std::fixed << std::setprecision(1) 
               << (100.0 * (1.0 - static_cast<double>(packer.getData().size()) / (NUM_CHARS * 5))) 
               << "%\n";
-    std::cout << "Header generated: " << argv[2] << "\n";
-
+    std::cout << "Font atlas generated successfully at include/FontAtlas.h!\n";
     return 0;
 }
