@@ -14,6 +14,7 @@ protected:
     float yPos;
     int width;
     int height;
+    uint8_t opacity;
     TwoDimensionalLayout layout;
 
 public:

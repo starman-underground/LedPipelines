@@ -131,8 +131,8 @@ void generateOptimizedHeader(const std::vector<uint8_t>& packedData,
 }
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <font.ttf>\n";
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " <font.ttf> <targetHeight>\n";
         std::cerr << "Generates optimized variable-width bitmap font atlas from .ttf file at include/resources/FontAtlas.h.\n";
         return 1;
     }
@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
     }
 
     // Determine optimal font size based on target height
-    int targetHeight = 8; // You can adjust this
+    int targetHeight = atoi(argv[2]); // You can adjust this
     float scale = stbtt_ScaleForPixelHeight(&font, targetHeight);
     
     BitPacker packer;

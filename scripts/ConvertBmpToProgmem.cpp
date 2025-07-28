@@ -248,7 +248,7 @@ public:
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
-        std::cout << "Usage: " << argv[0] << " <bmp_file> <sprite_width> <sprite_height> [array_name] [include_alpha] [output_file]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <bmp_file> <sprite_width> <sprite_height> [array_name] [include_alpha] [output_header_file]" << std::endl;
         std::cout << "Example: " << argv[0] << " fire_sprites.bmp 8 8 fireSprites true sprites.h" << std::endl;
         std::cout << "include_alpha: true/false (default: false - alpha channel discarded)" << std::endl;
         return 1;

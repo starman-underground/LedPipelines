@@ -20,8 +20,8 @@ void TextEffect::calculate(float startX, TemporaryLedData &tempData) {
         char currentChar = text[c];
         auto gm = getGlyphMetrics(currentChar);
         for (int i = 0; i < gm.height; ++i) {
-            for (int j = 0; j < gm.width + 1; ++j) {
-                int x  = static_cast<int>(startX) + currentAdvance + j;
+            for (int j = 0; j < gm.width; ++j) {
+                int x  = static_cast<int>(startX) + currentAdvance + gm.xOffset + j;
                 int y = bottomLine + gm.yOffset + i;
                 int index = ledpipelines::calculateLedIndex(layout, x, y, displayWidth, displayHeight);
                 if (index < TemporaryLedData::size && index >= 0 && x >= 0 && y >= 0 && x < displayWidth && y < displayHeight) {                    

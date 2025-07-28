@@ -9,7 +9,8 @@ ImageEffect::ImageEffect(const uint8_t *imageData, TwoDimensionalLayout layout, 
       yPos(0.0f),
       width(width),
       height(height),
-      layout(layout) {}
+      layout(layout),
+      opacity(opacity) {}
 
 void ImageEffect::calculate(float startX, TemporaryLedData &tempData) {
     // Assume the display dimensions are provided or known
@@ -21,7 +22,7 @@ void ImageEffect::calculate(float startX, TemporaryLedData &tempData) {
             if (index >= 0 && index < TemporaryLedData::size) {
                 int offset = (y * width + x) * 4;
                 CRGB color(imageData[offset], imageData[offset + 1], imageData[offset + 2]);
-                tempData.set(index, color, imageData[offset + 3]);
+                tempData.set(index, color, static_cast<uint8_t>((static_cast<float>(imageData[offset + 3])/255.0f)*opacity));
             }
         }
     }
