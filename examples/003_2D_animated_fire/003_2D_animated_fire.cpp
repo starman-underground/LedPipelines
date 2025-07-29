@@ -21,6 +21,12 @@ void setup() {
     FastLED.addLeds<WS2812B, 38, GRB>(leds, 256);
 
     // Also create a LedLayout object that contains information on the order of LEDs in a LED matrix and its dimensions.
+    // Change the layout to match your LED matrix configuration.
+    // Try this and make the following changes depending on your observations:
+    // upside down -> YFLIP the layout
+    // mirrored text -> XFLIP the layout
+    // rotate the text 90 degrees clockwise -> change VERTICAL to HORIZONTAL
+    // NOTE: Changes from VERTICAL to HORIZONTAL will also require switching the width and height parameters.
     // More information on this object and LED orderings at include/enums/LedLayout.h
     LedLayout layout = LedLayout(LedLayout::VERTICAL_SNAKE_XYFLIP, 32, 8);
 
