@@ -5,7 +5,7 @@
 #include "enums/BlendingMode.h"
 #include "enums/SmoothingFunction.h"
 #include "enums/SamplingFunction.h"
-#include "enums/TwoDimensionalLayout.h"
+#include "enums/LedLayout.h"
 #include "TemporaryLedData.h"
 #include "LedPipelinesLogger.h"
 #include "resources/FontAtlas.h"
@@ -43,16 +43,4 @@ void setMaxRefreshRate(float refreshesPerSecond);
  */
 String colorToHex(CRGB color, uint8_t opacity);
 
-/**
- * Calculate the index of a pixel in a 2D layout, given the layout type and coordinates.
- * @param layout the layout determines the ordering of LEDs in the 2D matrix.
- * @param x the x coordinate of the pixel.
- * @param y the y coordinate of the pixel.
- * @param w the width of the layout.
- * @param h the height of the layout.
- * @return the calculated LED index of the pixel.
- */
-int calculateLedIndex(TwoDimensionalLayout layout, int x, int y, int w, int h);
-
 }
-

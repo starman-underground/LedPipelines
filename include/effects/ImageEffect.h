@@ -15,11 +15,14 @@ protected:
     int width;
     int height;
     uint8_t opacity;
-    TwoDimensionalLayout layout;
+    LedLayout layout;
 
 public:
-    explicit ImageEffect(const uint8_t *imageData, TwoDimensionalLayout layout, int width, int height, uint8_t opacity = 255);
-    void calculate(float startX, TemporaryLedData &tempData) override;
+    explicit ImageEffect(const uint8_t *imageData, LedLayout layout, int width, int height, uint8_t opacity = 255);
+    void calculate(float startIndex, TemporaryLedData &tempData) override {
+        calculate(layout.calculateCoordinates(startIndex), tempData);
+    }
+    void calculate(std::pair<float, float>, TemporaryLedData &tempData);
 };
 
 }

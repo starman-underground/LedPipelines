@@ -182,7 +182,7 @@ public:
         *out << "// Output format: " << format << std::endl;
         *out << "// Alpha channel: " << (includeAlpha && hasAlpha ? "included" : "discarded") << "\n\n";
         
-        *out << "#include <pgmspace.h>\n\n";
+        *out << "#include <Arduino.h>\n\n";
         
         // Generate individual frame arrays
         for (int frame = 0; frame < totalFrames; frame++) {
