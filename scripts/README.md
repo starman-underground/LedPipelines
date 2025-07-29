@@ -9,9 +9,9 @@ This script converts a TrueType font file into a C array compressed font atlas a
         ```
     - The proper max character height/width depends on your display resolution.
         - Specifying height is enough as the font allows the relative width to be inferred.
-- In addition to storing character bitmaps, we must also store character metadata to read and render each character.
+- In addition to storing character bitmaps (glyphs), we must also store glyph metadata to read and render each character.
     ```cpp
-    struct GlyphMetrics {
+    struct GlyphMetrics { // Glyph = visual representation of character
         uint8_t width;
         uint8_t height;
         int8_t xOffset; // Horizontal offset from cursor to left side of glyph
@@ -20,7 +20,7 @@ This script converts a TrueType font file into a C array compressed font atlas a
         uint16_t dataOffset; // Offset in bits from start of bitmap data
     };
     ```
-- This data is then written to the header file ../include/resources/FontAtlas.h which is linked to by LedPipelineUtils.h.
+- This data is then written to the header file `../include/resources/FontAtlas.h` which is linked to by `LedPipelineUtils.h`.
 ## Building
 ```bash
 clang++ -std=c++17 -O2 ConvertFontToProgmem.cpp -o ConvertFontToProgmem.exe
@@ -29,9 +29,13 @@ clang++ -std=c++17 -O2 ConvertFontToProgmem.cpp -o ConvertFontToProgmem.exe
 ```bash
 .\ConvertFontToProgmem.exe <font.ttf> <targetHeight>
 ```
-- The output from the script is written to ../include/resources/FontAtlas.h
+- The output from the script is written to `../include/resources/FontAtlas.h`.
 - The font must be a TrueType font file (.ttf).
 - The target height is the maximum height in pixels of a character in the generated font.
+- Here is an example used to generate the character atlas used in example 004 (fonts\TeenyTinyPixls-o2zo.ttf is not included due to licensing but can be found at https://resourceboy.com/fonts/teeny-tiny-pixls-font/).
+    ```bash
+    .\ConvertFontToProgmem.exe .\fonts\TeenyTinyPixls-o2zo.ttf 8
+    ```
 # ConvertBmpToProgmem.cpp
 This script converts a Bitmap image file into 1 or more C arrays for storage of small static images and animation frames.
 - If you use the script to convert a single image file into multiple C arrays with each array representing a frame, each frame must be the same size and stored horizontally in the bitmap image.
@@ -60,3 +64,7 @@ clang++ -std=c++17 -O2 ConvertBmpToProgmem.cpp -o ConvertBmpToProgmem.exe
 - Pass 'true' as the 5th cmdline arg if your image has an alpha channel.
 - The order of sprite frames starts at the top left of the image and proceeds left to right and then top to bottom.
 - See include/resources/FireSprites.h for an example of the format of generated data
+- Here is an example that was used to generate the sprites for the fire animation in example 003 using the spritesheet at `scripts/sprites/fire_anim_spritesheet.bmp`:
+    ```bash
+    .\ConvertBmpToProgmem.exe .\sprites\fire_anim_spritesheet.bmp 8 8 fireAnimation true FireSprites.h
+    ```

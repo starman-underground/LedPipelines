@@ -13,7 +13,7 @@ constexpr int LAST_CHAR = 126;
 constexpr int NUM_CHARS = LAST_CHAR - FIRST_CHAR + 1;
 
 // Glyph metrics structure
-struct GlyphMetrics {
+struct GlyphMetadata {
     uint8_t width;
     uint8_t height;
     int8_t xOffset; // Horizontal offset from cursor
@@ -57,7 +57,7 @@ bool extractPixel(unsigned char* bitmap, int width, int height, int x, int y) {
 }
 
 void generateOptimizedHeader(const std::vector<uint8_t>& packedData, 
-                           const std::vector<GlyphMetrics>& metrics,
+                           const std::vector<GlyphMetadata>& metadata,
                            int maxHeight) {
     std::ofstream header("../include/resources/FontAtlas.h");
     
@@ -73,7 +73,7 @@ void generateOptimizedHeader(const std::vector<uint8_t>& packedData,
     header << "constexpr int FONT_MAX_HEIGHT = " << maxHeight << ";\n\n";
     
     // Glyph metrics structure
-    header << "struct GlyphMetrics {\n";
+    header << "struct GlyphMetadata {\n";
     header << "    uint8_t width;\n";
     header << "    uint8_t height;\n";
     header << "    int8_t xOffset;\n";
@@ -83,16 +83,16 @@ void generateOptimizedHeader(const std::vector<uint8_t>& packedData,
     header << "};\n\n";
     
     // Glyph metrics array
-    header << "const GlyphMetrics GLYPH_METRICS[] PROGMEM = {\n";
-    for (size_t i = 0; i < metrics.size(); ++i) {
-        const auto& m = metrics[i];
+    header << "const GlyphMetadata GLYPH_METADATA[] PROGMEM = {\n";
+    for (size_t i = 0; i < metadata.size(); ++i) {
+        const auto& m = metadata[i];
         header << "    {" << static_cast<int>(m.width) << ", " 
                << static_cast<int>(m.height) << ", "
                << static_cast<int>(m.xOffset) << ", "
                << static_cast<int>(m.yOffset) << ", "
-               << static_cast<int>(m.advanceWidth) << ", "
+               << static_cast<int>(m.width + 1) << ", "
                << m.dataOffset << "}";
-        if (i < metrics.size() - 1) header << ",";
+        if (i < metadata.size() - 1) header << ",";
         header << " // '" << static_cast<char>(FIRST_CHAR + i) << "'\n";
     }
     header << "};\n\n";
@@ -109,20 +109,20 @@ void generateOptimizedHeader(const std::vector<uint8_t>& packedData,
     header << "\n};\n\n";
     
     // Helper functions
-    header << "// Helper function to get glyph metrics (undefined behavior if char is out of range: ['" << static_cast<char>(FIRST_CHAR) << "' (" << FIRST_CHAR << "), '" << static_cast<char>(LAST_CHAR) << "' (" << std::dec << LAST_CHAR << ")])\n";
-    header << "inline const GlyphMetrics& getGlyphMetrics(char c) {\n";
-    header << "    return GLYPH_METRICS[c - FIRST_ASCII];\n";
+    header << "// Helper function to get glyph metadata (undefined behavior if char is out of range: ['" << static_cast<char>(FIRST_CHAR) << "' (" << FIRST_CHAR << "), '" << static_cast<char>(LAST_CHAR) << "' (" << std::dec << LAST_CHAR << ")])\n";
+    header << "inline const GlyphMetadata& getGlyphMetadata(char c) {\n";
+    header << "    return GLYPH_METADATA[c - FIRST_ASCII];\n";
     header << "}\n\n";
     
     header << "// Helper function to extract glyph bitmap\n";
     header << "// Returns true if pixel at (x,y) is set, false otherwise\n";
     header << "inline bool getGlyphPixel(char c, int x, int y) {\n";
-    header << "    const GlyphMetrics& metrics = getGlyphMetrics(c);\n";
-    header << "    if (x >= metrics.width || y >= metrics.height || x < 0 || y < 0) {\n";
+    header << "    const GlyphMetadata& metadata = getGlyphMetadata(c);\n";
+    header << "    if (x >= metadata.width || y >= metadata.height || x < 0 || y < 0) {\n";
     header << "        return false;\n";
     header << "    }\n";
     header << "    \n";
-    header << "    int bitOffset = metrics.dataOffset + (y * metrics.width + x);\n";
+    header << "    int bitOffset = metadata.dataOffset + (y * metadata.width + x);\n";
     header << "    int byteIndex = bitOffset / 8;\n";
     header << "    int bitPosition = 7 - (bitOffset % 8);\n";
     header << "    \n";
@@ -162,7 +162,7 @@ int main(int argc, char** argv) {
     float scale = stbtt_ScaleForPixelHeight(&font, targetHeight);
     
     BitPacker packer;
-    std::vector<GlyphMetrics> metrics;
+    std::vector<GlyphMetadata> metrics;
     metrics.reserve(NUM_CHARS);
     
     int maxHeight = 0;
@@ -190,7 +190,7 @@ int main(int argc, char** argv) {
             height = 1;
         }
         
-        GlyphMetrics gm;
+        GlyphMetadata gm;
         gm.width = std::min(255, std::max(1, width));
         gm.height = std::min(255, std::max(1, height));
         gm.xOffset = std::max(-128, std::min(127, xoff));
@@ -218,7 +218,7 @@ int main(int argc, char** argv) {
         unsigned char* bitmap = stbtt_GetGlyphBitmap(
             &font, scale, scale, glyph, &width, &height, &xoff, &yoff);
         
-        const GlyphMetrics& gm = metrics[charIndex];
+        const GlyphMetadata& gm = metrics[charIndex];
         
         // Pack pixels in row-major order (y, then x)
         for (int y = 0; y < gm.height; ++y) {

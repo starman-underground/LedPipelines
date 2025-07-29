@@ -8,6 +8,8 @@ public:
     int width, height;
 
     enum LedLayout_ {
+        // Single wire layout, all LEDs in a single line
+        ONE_DIMENSIONAL, 
         // LED wire snakes from top to bottom then bottom to top, starting from top left and going to the right
         VERTICAL_SNAKE,
         // LED wire snakes from top to bottom then bottom to top, starting from top right and going to the left

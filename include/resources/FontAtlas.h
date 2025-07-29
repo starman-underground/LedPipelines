@@ -8,7 +8,7 @@ constexpr int LAST_ASCII = 126;
 constexpr int NUM_CHARACTERS = 95;
 constexpr int FONT_MAX_HEIGHT = 7;
 
-struct GlyphMetrics {
+struct GlyphMetadata {
     uint8_t width;
     uint8_t height;
     int8_t xOffset;
@@ -17,17 +17,17 @@ struct GlyphMetrics {
     uint16_t dataOffset; // Offset in bits
 };
 
-const GlyphMetrics GLYPH_METRICS[] PROGMEM = {
+const GlyphMetadata GLYPH_METADATA[] PROGMEM = {
     {1, 1, 0, 0, 2, 0}, // ' '
-    {2, 7, 1, -7, 5, 1}, // '!'
+    {2, 7, 1, -7, 3, 1}, // '!'
     {4, 4, 0, -7, 5, 15}, // '"'
     {4, 7, 0, -7, 5, 31}, // '#'
     {4, 7, 0, -7, 5, 59}, // '$'
     {4, 7, 0, -7, 5, 87}, // '%'
     {4, 7, 0, -7, 5, 115}, // '&'
     {2, 4, 1, -7, 3, 143}, // '''
-    {3, 7, 0, -7, 5, 151}, // '('
-    {3, 7, 0, -7, 5, 172}, // ')'
+    {3, 7, 0, -7, 4, 151}, // '('
+    {3, 7, 0, -7, 4, 172}, // ')'
     {4, 6, 0, -7, 5, 193}, // '*'
     {4, 5, 0, -6, 5, 217}, // '+'
     {2, 3, 1, -3, 3, 237}, // ','
@@ -92,7 +92,7 @@ const GlyphMetrics GLYPH_METRICS[] PROGMEM = {
     {4, 6, 0, -6, 5, 1707}, // 'g'
     {4, 7, 0, -7, 5, 1731}, // 'h'
     {4, 7, 0, -7, 5, 1759}, // 'i'
-    {3, 7, 0, -7, 5, 1787}, // 'j'
+    {3, 7, 0, -7, 4, 1787}, // 'j'
     {4, 7, 0, -7, 5, 1808}, // 'k'
     {4, 7, 0, -7, 5, 1836}, // 'l'
     {4, 6, 0, -6, 5, 1864}, // 'm'
@@ -136,20 +136,20 @@ const uint8_t COMPRESSED_FONT_DATA[] PROGMEM = {
     0x0f,0x78,0xcf,0x37,0x6e,0x66,0x73,0xff,0xf3,0x99,0xd9,0xb8,0x07,0xf2,0x00
 };
 
-// Helper function to get glyph metrics (undefined behavior if char is out of range: [' ' (20), '~' (126)])
-inline const GlyphMetrics& getGlyphMetrics(char c) {
-    return GLYPH_METRICS[c - FIRST_ASCII];
+// Helper function to get glyph metadata (undefined behavior if char is out of range: [' ' (20), '~' (126)])
+inline const GlyphMetadata& getGlyphMetadata(char c) {
+    return GLYPH_METADATA[c - FIRST_ASCII];
 }
 
 // Helper function to extract glyph bitmap
 // Returns true if pixel at (x,y) is set, false otherwise
 inline bool getGlyphPixel(char c, int x, int y) {
-    const GlyphMetrics& metrics = getGlyphMetrics(c);
-    if (x >= metrics.width || y >= metrics.height || x < 0 || y < 0) {
+    const GlyphMetadata& metadata = getGlyphMetadata(c);
+    if (x >= metadata.width || y >= metadata.height || x < 0 || y < 0) {
         return false;
     }
     
-    int bitOffset = metrics.dataOffset + (y * metrics.width + x);
+    int bitOffset = metadata.dataOffset + (y * metadata.width + x);
     int byteIndex = bitOffset / 8;
     int bitPosition = 7 - (bitOffset % 8);
     

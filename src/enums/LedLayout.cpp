@@ -4,6 +4,8 @@ using namespace ledpipelines;
 
 int LedLayout::calculateLedIndex(int x, int y) {
     switch (value) {
+    case LedLayout::ONE_DIMENSIONAL:
+        return x; // y is ignored in this layout
     case LedLayout::VERTICAL_SNAKE:
         return (x % 2 == 0) ? (x*height + y) : (x*height + (height - 1 - y));
     case LedLayout::VERTICAL_SNAKE_XFLIP:
@@ -25,6 +27,8 @@ int LedLayout::calculateLedIndex(int x, int y) {
 
 std::pair<float, float> LedLayout::calculateCoordinates(int ledIndex) {
     switch (value) {
+    case LedLayout::ONE_DIMENSIONAL:
+        return { static_cast<float>(ledIndex), 0.0f };
     case LedLayout::VERTICAL_SNAKE:
         return { (ledIndex / height), (ledIndex / height) % 2 == 0 ? (ledIndex % height) : (height - 1 - (ledIndex % height)) };
     case LedLayout::VERTICAL_SNAKE_XFLIP:

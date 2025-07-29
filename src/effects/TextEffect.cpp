@@ -7,7 +7,7 @@ void TextEffect::calculate(float startIndex, TemporaryLedData &tempData) {
     auto [startX, startY] = layout.calculateCoordinates(static_cast<int>(startIndex));
     for (size_t c = 0; c < text.size(); ++c) {
         char currentChar = text[c];
-        GlyphMetrics gm = getGlyphMetrics(currentChar);
+        GlyphMetadata gm = getGlyphMetadata(currentChar);
         for (int i = 0; i < gm.height; ++i) {
             for (int j = 0; j < gm.width; ++j) {
                 int x  = static_cast<int>(startX) + currentAdvance + gm.xOffset + j;
@@ -17,7 +17,7 @@ void TextEffect::calculate(float startIndex, TemporaryLedData &tempData) {
                     if (getGlyphPixel(currentChar, j, i)) {
                         tempData.set(index, color, opacity);
                     } else {
-                        tempData.set(index, bg_color, 16);
+                        tempData.set(index, bg_color, bg_opacity);
                     }
                 }
             }
