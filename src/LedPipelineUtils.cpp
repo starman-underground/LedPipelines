@@ -50,8 +50,3 @@ static String byteToHex(uint8_t num) {
 String ledpipelines::colorToHex(CRGB color, uint8_t opacity) {
     return String(byteToHex(color.r) + byteToHex(color.g) + byteToHex(color.b) + byteToHex(opacity));
 }
-
-
-
-
-

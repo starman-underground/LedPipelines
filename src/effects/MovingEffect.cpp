@@ -11,17 +11,39 @@ MovingEffect::MovingEffect(
         float runtimeSeconds,
         float startPosition,
         float endPosition,
+        SmoothingFunction smoothingFunction,
+        LedLayout layout
+        )
+        : WrapperEffect(stage),
+          startPosition(startPosition, 0),
+          endPosition(endPosition, 0),
+          runtimeSeconds(runtimeSeconds),
+          elapsedPercentage(0),
+          smoothingFunction(smoothingFunction),
+          layout(layout) {}
+
+MovingEffect::MovingEffect(
+        BaseLedPipelineStage *stage,
+        float runtimeSeconds,
+        LedLayout layout,
+        std::pair<float, float> startPosition,
+        std::pair<float, float> endPosition,
         SmoothingFunction smoothingFunction
         )
         : WrapperEffect(stage),
-          currentPosition(0),
           startPosition(startPosition),
           endPosition(endPosition),
           runtimeSeconds(runtimeSeconds),
           elapsedPercentage(0),
-          smoothingFunction(smoothingFunction) {}
+          smoothingFunction(smoothingFunction),
+          layout(layout) {}
 
 void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
+    if (this->state == LedPipelineRunningState::DONE) return;
+    this->calculate({startIndex, 0}, tempData);
+}
+
+void MovingEffect::calculate(std::pair<float, float> start, TemporaryLedData &tempData) {
     if (this->state == LedPipelineRunningState::DONE) return;
 
     if (this->state == LedPipelineRunningState::NOT_STARTED) {
@@ -31,12 +53,11 @@ void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
 
     this->elapsedPercentage = (millis() - this->startTimeMillis) / runtimeSeconds / 1000.0f;
 
+    auto currentPosition = smoothingFunction(elapsedPercentage, startPosition, endPosition);
 
-    this->currentPosition = smoothingFunction(elapsedPercentage, startPosition, endPosition);
+    LPLogger::log(String("elapsed percentage: ") + elapsedPercentage + " current position: (" + currentPosition.first + ", " + currentPosition.second + ")");
 
-    LPLogger::log(String("elapsed percentage: ") + elapsedPercentage + " current position: " + currentPosition);
-
-    this->stage->calculate(startIndex + currentPosition, tempData);
+    this->stage->calculate(layout.calculateLedIndex(start.first + currentPosition.first, start.second + currentPosition.second), tempData);
 
     if (this->stage->state == LedPipelineRunningState::DONE || this->elapsedPercentage >= 1) {
         this->state = LedPipelineRunningState::DONE;
@@ -45,6 +66,5 @@ void MovingEffect::calculate(float startIndex, TemporaryLedData &tempData) {
 
 void MovingEffect::reset() {
     WrapperEffect::reset();
-    this->currentPosition = this->startPosition;
     this->elapsedPercentage = 0;
 }

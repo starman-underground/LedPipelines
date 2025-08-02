@@ -53,3 +53,12 @@ float SmoothingFunction::operator()(float amount, float oldMin, float oldMax, fl
 
     return (newMin + (newMax - newMin) * percentage);
 }
+
+std::pair<float, float> SmoothingFunction::operator()(float percentage,
+                     std::pair<float, float> oldMin,
+                     std::pair<float, float> oldMax,
+                     std::pair<float, float> newMin,
+                     std::pair<float, float> newMax) {
+    return { this->operator()(percentage, oldMin.first, oldMax.first, newMin.first, newMax.first),
+             this->operator()(percentage, oldMin.second, oldMax.second, newMin.second, newMax.second) };
+}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 
 namespace ledpipelines {
 class SmoothingFunction {
@@ -37,6 +39,19 @@ public:
 
     float operator()(float amount, float oldMin, float oldMax, float newMin, float newMax);
 
+    std::pair<float, float> operator()(float percentage, std::pair<float, float> max) {
+        return this->operator()(percentage, std::pair<float, float>(0.0f, 0.0f), max);
+    }
+
+    std::pair<float, float> operator()(float percentage, std::pair<float, float> min, std::pair<float, float> max) {
+        return this->operator()(percentage, {0, 0}, {1, 1}, min, max);
+    }
+
+    std::pair<float, float> operator()(float percentage,
+                     std::pair<float, float> oldMin,
+                     std::pair<float, float> oldMax,
+                     std::pair<float, float> newMin,
+                     std::pair<float, float> newMax);
 
 private:
     SmoothingFunction_ value;

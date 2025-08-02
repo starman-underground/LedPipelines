@@ -1,4 +1,9 @@
 .pio
 # for pio pkg pack
 *.gz
+# for development
 .idea
+.vscode
+# for font compression
+*.ttf
+*.exe

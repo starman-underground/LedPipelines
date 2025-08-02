@@ -5,8 +5,11 @@
 #include "enums/BlendingMode.h"
 #include "enums/SmoothingFunction.h"
 #include "enums/SamplingFunction.h"
+#include "enums/LedLayout.h"
 #include "TemporaryLedData.h"
 #include "LedPipelinesLogger.h"
+#include "resources/FontAtlas.h"
+#include "resources/FireSprites.h"
 
 
 CRGB operator*(CRGB first, CRGB second);
@@ -39,6 +42,5 @@ void setMaxRefreshRate(float refreshesPerSecond);
  * @return the color in Hex form in a string.
  */
 String colorToHex(CRGB color, uint8_t opacity);
-
 
 }

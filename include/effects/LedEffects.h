@@ -23,3 +23,5 @@
 // basic effects
 #include "SolidEffect.h"
 #include "WaitEffect.h"
+#include "TextEffect.h"
+#include "ImageEffect.h"
